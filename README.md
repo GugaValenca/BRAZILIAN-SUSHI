@@ -57,7 +57,9 @@ Then open the `index.html` file in your browser. Boom, it's there!
 
 ## 📸 Screenshots
 
-*(Add screenshots of your project here to showcase the layout and structure)*
+### 🖥️ Homepage  
+![Homepage](images/home.PNG)
+
 
 ---
 
