@@ -6,6 +6,15 @@ This project is a showcase of my work as a **Frontend Developer** (soon to be **
 
 ---
 
+## 📸 Screenshots
+
+### 🖥️ Homepage  
+![Homepage Screenshot](images/home.png)
+
+
+
+---
+
 ## 🚀 Live Preview
 
 👉 [Click here to visit the site](https://gugavalenca.github.io/BRAZILIAN-SUSHI/)
@@ -53,18 +62,13 @@ cd BRAZILIAN-SUSHI
 
 Then open the `index.html` file in your browser. Boom, it's there!
 
----
-
-## 📸 Screenshots
-
-*(Add screenshots of your project here to showcase the layout and structure)*
 
 ---
 
 ## 🤝 Want to Collaborate?
 
 I’m open to feedback, suggestions, and collaborations!  
-Feel free to open issues or reach out via [LinkedIn](https://www.linkedin.com/in/guga-valenca) 📬
+Feel free to open issues or reach out via [LinkedIn](https://www.linkedin.com/in/gugavalenca) 📬
 
 ---
 
