@@ -12,6 +12,7 @@ This project is a showcase of my work as a **Frontend Developer** (soon to be **
 ![Homepage Screenshot](images/home.png)
 
 
+
 ---
 
 ## 🚀 Live Preview
