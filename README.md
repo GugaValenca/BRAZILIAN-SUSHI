@@ -66,7 +66,7 @@ Then open the `index.html` file in your browser. Boom, it's there!
 ## 🤝 Want to Collaborate?
 
 I’m open to feedback, suggestions, and collaborations!  
-Feel free to open issues or reach out via [LinkedIn](https://www.linkedin.com/in/guga-valenca) 📬
+Feel free to open issues or reach out via [LinkedIn](https://www.linkedin.com/in/gustavo-valenca) 📬
 
 ---
 
