@@ -7,10 +7,7 @@ This project is a showcase of my work as a **Frontend Developer** (soon to be **
 ---
 
 
-## 📸 Screenshots
 
-### 🖥️ Homepage  
-![Homepage Screenshot](images/home.png)
 
 
 
