@@ -16,6 +16,7 @@
 </p>
 
 <p align="center">
+  <strong>Live Demo:</strong><br />
   <a href="https://brazilian-sushi.vercel.app">
     <img alt="Live Demo" src="https://img.shields.io/badge/Live_Demo-Brazilian_Sushi-B22222?style=for-the-badge&logo=vercel&logoColor=white" />
   </a>
