@@ -31,11 +31,13 @@ const MenuPage = () => {
   const { data: menuApiItems, isLoading } = useQuery({
     queryKey: ["menu-items"],
     queryFn: () => fetchMenuItems(),
+    staleTime: 1000 * 60 * 10,
   });
 
   const { data: categoriesApi } = useQuery({
     queryKey: ["menu-categories"],
     queryFn: fetchCategories,
+    staleTime: 1000 * 60 * 30,
   });
 
   const { data: favorites = [] } = useQuery({

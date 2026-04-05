@@ -31,7 +31,14 @@ const MenuCard = ({ item, index = 0, onAddToCart, isFavorite = false, onToggleFa
     className="group bg-card rounded-xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300"
   >
     <div className="relative aspect-square overflow-hidden bg-secondary/40">
-      <img src={item.image || "/favicon.ico"} alt={item.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      <img
+        src={item.image || "/favicon.ico"}
+        alt={item.name}
+        loading={index < 4 ? "eager" : "lazy"}
+        fetchPriority={index < 2 ? "high" : "auto"}
+        decoding="async"
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+      />
       {item.featured && (
         <span className="absolute top-3 left-3 bg-gradient-gold text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
           Featured

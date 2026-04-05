@@ -29,16 +29,19 @@ const Index = () => {
   const { data: featuredItems } = useQuery({
     queryKey: ["featured-items"],
     queryFn: fetchFeaturedItems,
+    staleTime: 1000 * 60 * 10,
   });
 
   const { data: promotions } = useQuery({
     queryKey: ["promotions"],
     queryFn: fetchPromotions,
+    staleTime: 1000 * 60 * 10,
   });
 
   const { data: reviews } = useQuery({
     queryKey: ["reviews"],
     queryFn: fetchReviews,
+    staleTime: 1000 * 60 * 10,
   });
 
   const featured = featuredItems?.length ? featuredItems.slice(0, 4).map(normalizeMenuItem) : fallbackFeatured;
@@ -53,7 +56,16 @@ const Index = () => {
     <div className="min-h-screen">
       <section className="relative h-screen min-h-[600px] flex items-center">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="Premium sushi platter" width={1920} height={1080} className="w-full h-full object-cover" />
+          <img
+            src={heroImage}
+            alt="Premium sushi platter"
+            width={1920}
+            height={1080}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/30" />
         </div>
         <div className="container relative z-10">

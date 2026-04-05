@@ -23,11 +23,11 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="container flex items-center justify-between h-16 md:h-20">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2 md:flex-1">
           <span className="text-2xl md:text-3xl font-display font-bold text-gradient-gold">{businessInfo.name}</span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex flex-1 items-center justify-center gap-8">
           {links.map((l) => (
             <Link
               key={l.to}
@@ -39,6 +39,9 @@ const Navbar = () => {
               {l.label}
             </Link>
           ))}
+        </div>
+
+        <div className="hidden md:flex flex-1 items-center justify-end gap-4">
           {user?.is_staff && (
             <Link to="/staff-dashboard" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
               <LayoutDashboard className="w-4 h-4" /> Staff

@@ -30,6 +30,7 @@ const CheckoutPage = () => {
   const { data: deliveryZones } = useQuery({
     queryKey: ["delivery-zones"],
     queryFn: fetchDeliveryZones,
+    staleTime: 1000 * 60 * 30,
   });
 
   const selectedZone = useMemo(
@@ -180,7 +181,13 @@ const CheckoutPage = () => {
                 {items.map((entry) => (
                   <div key={entry.item.id} className="border-b border-border pb-4">
                     <div className="flex gap-4">
-                      <img src={entry.item.image || "/favicon.ico"} alt={entry.item.name} className="w-20 h-20 rounded-lg object-cover bg-secondary/50" />
+                      <img
+                        src={entry.item.image || "/favicon.ico"}
+                        alt={entry.item.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-20 h-20 rounded-lg object-cover bg-secondary/50"
+                      />
                       <div className="flex-1">
                         <div className="flex items-start justify-between gap-3">
                           <div>
