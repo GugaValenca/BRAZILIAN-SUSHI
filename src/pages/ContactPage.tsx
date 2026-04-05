@@ -11,7 +11,7 @@ import { businessInfo } from "@/lib/site";
 const contactInfo = [
   { icon: Phone, label: "Phone", value: businessInfo.phoneDisplay, href: businessInfo.phoneHref },
   { icon: Mail, label: "Email", value: businessInfo.email, href: businessInfo.emailHref },
-  { icon: MessageCircle, label: "WhatsApp", value: "Chat with us", href: businessInfo.whatsappHref },
+  { icon: MessageCircle, label: "WhatsApp", value: "Message our team", href: businessInfo.whatsappHref },
   { icon: MessageCircle, label: "Telegram", value: "@braziliansushi", href: businessInfo.telegramHref },
 ];
 
@@ -55,7 +55,7 @@ const ContactPage = () => {
         <SectionHeading
           label="Reach Out"
           title="Contact Us"
-          subtitle="Questions, catering inquiries, or feedback. Send a real message directly to the restaurant inbox."
+          subtitle="Questions about delivery, pickup, catering, or your order? Our team is here to help."
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
@@ -115,7 +115,7 @@ const ContactPage = () => {
                   <Send className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="text-xl font-display font-bold mb-2">Message Sent</h3>
-                <p className="text-muted-foreground text-sm">Thank you for reaching out. We will get back to you within 24 hours.</p>
+                <p className="text-muted-foreground text-sm">Thank you for reaching out. We will get back to you as soon as possible during business hours.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="bg-card border border-border rounded-xl p-6 md:p-8 space-y-5">
@@ -158,7 +158,7 @@ const ContactPage = () => {
                     rows={4}
                     value={formData.message}
                     onChange={(e) => handleFieldChange("message", e.target.value)}
-                    placeholder="How can we help?"
+                    placeholder="Tell us how we can help"
                     className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors resize-none"
                   />
                 </div>

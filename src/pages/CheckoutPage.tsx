@@ -80,14 +80,14 @@ const CheckoutPage = () => {
         <SectionHeading
           label="Checkout"
           title="Complete Your Order"
-          subtitle="Review your cart, choose delivery or pickup, and send your order directly to the backend."
+          subtitle="Review your selections, choose delivery or pickup, and confirm the details for a smooth handoff to our kitchen."
         />
 
         {items.length === 0 ? (
           <div className="max-w-2xl mx-auto bg-card border border-border rounded-2xl p-10 text-center">
             <ShoppingBag className="w-12 h-12 text-primary mx-auto mb-4" />
             <h2 className="text-2xl font-display font-bold mb-3">Your cart is empty</h2>
-            <p className="text-muted-foreground mb-6">Add a few items from the menu to start a delivery or pickup order.</p>
+            <p className="text-muted-foreground mb-6">Add a few favorites from the menu to begin your delivery or pickup order.</p>
             <Link to="/menu" className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-6 py-3 rounded-lg font-semibold">
               Browse Menu <ArrowRight className="w-4 h-4" />
             </Link>
@@ -100,11 +100,11 @@ const CheckoutPage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button type="button" onClick={() => setOrderType("delivery")} className={`rounded-xl border p-4 text-left ${orderType === "delivery" ? "border-primary bg-primary/5" : "border-border"}`}>
                     <span className="font-semibold">Delivery</span>
-                    <p className="text-sm text-muted-foreground mt-1">Have it sent to your address.</p>
+                    <p className="text-sm text-muted-foreground mt-1">Freshly prepared and sent to your address.</p>
                   </button>
                   <button type="button" onClick={() => setOrderType("pickup")} className={`rounded-xl border p-4 text-left ${orderType === "pickup" ? "border-primary bg-primary/5" : "border-border"}`}>
                     <span className="font-semibold">Pickup</span>
-                    <p className="text-sm text-muted-foreground mt-1">Skip delivery fees and pick it up yourself.</p>
+                    <p className="text-sm text-muted-foreground mt-1">Skip the delivery fee and pick it up at your convenience.</p>
                   </button>
                 </div>
               </div>
@@ -117,8 +117,8 @@ const CheckoutPage = () => {
                 </div>
                 <input value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} required type="email" placeholder="Email address" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm" />
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Order notes or special requests" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm resize-none" />
-                  <textarea value={allergyNotes} onChange={(e) => setAllergyNotes(e.target.value)} rows={3} placeholder="Allergies or dietary warnings" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm resize-none" />
+                  <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Extra napkins, sauce preferences, or special requests" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm resize-none" />
+                  <textarea value={allergyNotes} onChange={(e) => setAllergyNotes(e.target.value)} rows={3} placeholder="Allergies or dietary considerations we should know about" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm resize-none" />
                 </div>
               </div>
 
@@ -170,7 +170,7 @@ const CheckoutPage = () => {
               )}
 
               <button type="submit" disabled={!canSubmit || orderMutation.isPending} className="w-full bg-gradient-gold text-primary-foreground py-4 rounded-xl font-semibold disabled:opacity-70">
-                {orderMutation.isPending ? "Placing order..." : "Place Order"}
+                {orderMutation.isPending ? "Sending your order..." : "Place Order"}
               </button>
             </form>
 

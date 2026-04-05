@@ -39,18 +39,6 @@ const Navbar = () => {
               {l.label}
             </Link>
           ))}
-          <Link
-            to="/checkout"
-            className="relative inline-flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-semibold hover:border-primary/30"
-          >
-            <ShoppingBag className="w-4 h-4" />
-            Checkout
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-gradient-gold text-primary-foreground text-[10px] font-bold flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </Link>
           {user?.is_staff && (
             <Link to="/staff-dashboard" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
               <LayoutDashboard className="w-4 h-4" /> Staff
@@ -70,13 +58,18 @@ const Navbar = () => {
               Sign in
             </Link>
           )}
-          <a
-            href={businessInfo.phoneHref}
-            className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+          <Link
+            to="/checkout"
+            className="relative inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
           >
-            <Phone className="w-4 h-4" />
-            Order Now
-          </a>
+            <ShoppingBag className="w-4 h-4" />
+            Checkout
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-foreground text-background text-[10px] font-bold flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </Link>
         </div>
 
         <button onClick={() => setOpen(!open)} className="md:hidden text-foreground p-2" aria-label="Toggle menu">

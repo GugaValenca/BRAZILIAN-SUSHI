@@ -106,7 +106,7 @@ const MenuPage = () => {
         <SectionHeading
           label="Our Selection"
           title="The Menu"
-          subtitle="Handcrafted with the finest ingredients. Browse a live catalog backed by the restaurant API."
+          subtitle="Explore signature rolls, pristine sashimi, comforting starters, and composed combinations prepared with care."
         />
 
         <div className="max-w-3xl mx-auto mb-10 space-y-4">
@@ -114,7 +114,7 @@ const MenuPage = () => {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search the menu..."
+              placeholder="Search rolls, sashimi, combos..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-card border border-border rounded-xl pl-12 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
@@ -189,7 +189,7 @@ const MenuPage = () => {
           </div>
         ) : (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
-            <p className="text-muted-foreground text-lg">No items found. Try adjusting your filters.</p>
+            <p className="text-muted-foreground text-lg">No dishes matched your selection. Try another category or a broader search.</p>
           </motion.div>
         )}
       </div>

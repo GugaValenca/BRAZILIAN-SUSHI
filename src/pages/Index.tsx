@@ -14,10 +14,10 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 const fallbackFeatured = menuItems.filter((item) => item.featured).slice(0, 4);
 
 const benefits = [
-  { icon: Truck, title: "Fast Delivery", desc: "Hot and fresh to your door" },
-  { icon: Shield, title: "Verified Rewards", desc: "Exclusive perks for loyal customers" },
-  { icon: Clock, title: "Order Tracking", desc: "Real-time status updates" },
-  { icon: Star, title: "Premium Quality", desc: "Freshest ingredients daily" },
+  { icon: Truck, title: "Fast Delivery", desc: "Carefully packed and delivered fresh" },
+  { icon: Shield, title: "Verified Rewards", desc: "Exclusive perks for returning guests" },
+  { icon: Clock, title: "Order Tracking", desc: "Clear updates from kitchen to doorstep" },
+  { icon: Star, title: "Premium Quality", desc: "Selected ingredients and precise preparation" },
 ];
 
 const Index = () => {
@@ -44,9 +44,9 @@ const Index = () => {
   const featured = featuredItems?.length ? featuredItems.slice(0, 4).map(normalizeMenuItem) : fallbackFeatured;
   const promotionCards = promotions?.slice(0, 2) ?? [];
   const reviewCards = reviews?.slice(0, 3) ?? [
-    { id: 1, customer_name: "Maria S.", rating: 5, content: "Best sushi delivery in town! The Brazilian Roll is absolutely divine. Fast delivery and always fresh.", is_verified_customer: true, title: "Amazing", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
-    { id: 2, customer_name: "James L.", rating: 5, content: "Premium quality, beautiful presentation even for takeout. The Sashimi Deluxe is worth every penny.", is_verified_customer: true, title: "Premium", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
-    { id: 3, customer_name: "Ana P.", rating: 5, content: "Love the Brazilian twist on classic sushi. Verified customer perks are amazing!", is_verified_customer: true, title: "Favorite", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
+    { id: 1, customer_name: "Maria S.", rating: 5, content: "Beautiful presentation, balanced flavors, and rolls that arrive tasting as fresh as they look.", is_verified_customer: true, title: "Amazing", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
+    { id: 2, customer_name: "James L.", rating: 5, content: "The sashimi is consistently pristine and the hand rolls have that just-made texture you expect from a premium spot.", is_verified_customer: true, title: "Premium", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
+    { id: 3, customer_name: "Ana P.", rating: 5, content: "Refined, flavorful, and easy to order. It feels elevated without losing the warmth of a neighborhood favorite.", is_verified_customer: true, title: "Favorite", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
   ];
 
   return (
@@ -63,7 +63,7 @@ const Index = () => {
               Japanese Art, <span className="text-gradient-gold">Brazilian Soul</span>
             </h1>
             <p className="text-lg text-foreground/70 max-w-md mb-8">
-              Premium sushi crafted with precision and passion. Order online for delivery or pickup with a modern, mobile-first experience.
+              Refined sushi, composed with Japanese precision and a subtle Brazilian warmth. Enjoy delivery or pickup with a smooth, elegant ordering experience.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
@@ -110,7 +110,7 @@ const Index = () => {
 
       <section className="py-16 md:py-24">
         <div className="container">
-          <SectionHeading label="Our Favorites" title="Featured Items" subtitle="Hand-picked selections from our chef, refreshed from the live menu." />
+          <SectionHeading label="Our Favorites" title="Featured Items" subtitle="A curated selection of house favorites, from signature rolls to premium sashimi and shareable combinations." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featured.map((item, i) => (
               <MenuCard key={item.id} item={item} index={i} />
@@ -129,8 +129,8 @@ const Index = () => {
           <SectionHeading label="Special Offers" title="Today's Deals" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {(promotionCards.length ? promotionCards : [
-              { id: 1, title: "First Order 15% Off", description: "Use code WELCOME15 at checkout. Valid for new customers.", audience: "all" },
-              { id: 2, title: "Free Miso Soup", description: "Verified customers get a free miso soup with any combo order.", audience: "verified" },
+              { id: 1, title: "First Order 15% Off", description: "Use code WELCOME15 at checkout on your first order.", audience: "all" },
+              { id: 2, title: "Complimentary Miso Soup", description: "Verified customers receive a complimentary miso soup with any combo.", audience: "verified" },
             ]).map((promotion, index) => (
               <motion.div
                 key={promotion.id}
@@ -146,8 +146,8 @@ const Index = () => {
                 </span>
                 <h3 className="text-2xl font-display font-bold mt-2 mb-3">{promotion.title}</h3>
                 <p className="text-muted-foreground text-sm mb-4">{promotion.description}</p>
-                <Link to="/menu" className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-6 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
-                  Order Now <ArrowRight className="w-4 h-4" />
+                <Link to="/checkout" className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-6 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
+                  Checkout <ArrowRight className="w-4 h-4" />
                 </Link>
               </motion.div>
             ))}
@@ -199,7 +199,7 @@ const Index = () => {
 
       <section className="py-16 md:py-24 bg-card">
         <div className="container text-center">
-          <SectionHeading label="Get in Touch" title="Ready to Order?" />
+          <SectionHeading label="Get in Touch" title="Ready for Tonight?" />
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href={businessInfo.phoneHref} className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity">
               <Phone className="w-5 h-5" /> Call {businessInfo.phoneDisplay}

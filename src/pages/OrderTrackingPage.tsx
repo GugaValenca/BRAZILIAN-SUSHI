@@ -48,12 +48,12 @@ const OrderTrackingPage = () => {
         <SectionHeading
           label="Order Tracking"
           title="Track Your Order"
-          subtitle="Follow the live order status using the secure tracking token generated at checkout."
+          subtitle="Follow each step of your order, from confirmation to pickup or delivery."
         />
 
         {!orderId || !token ? (
           <div className="bg-card border border-border rounded-2xl p-8 text-center">
-            <p className="text-muted-foreground">Missing tracking details. Place an order first or open a valid tracking link.</p>
+            <p className="text-muted-foreground">Tracking details are missing. Please open your confirmation link or place a new order.</p>
           </div>
         ) : isLoading ? (
           <div className="bg-card border border-border rounded-2xl p-8 animate-pulse space-y-4">
@@ -104,7 +104,7 @@ const OrderTrackingPage = () => {
                       </div>
                       <div>
                         <p className="font-medium">{statusLabels[step]}</p>
-                        <p className="text-sm text-muted-foreground">{active ? "Completed or in progress" : "Waiting for this step"}</p>
+                        <p className="text-sm text-muted-foreground">{active ? "In progress or already completed" : "Coming up next"}</p>
                       </div>
                     </div>
                   );

@@ -11,7 +11,7 @@ export const businessInfo = {
     "Mon - Sat: 11:00 AM - 10:00 PM",
     "Sunday: 12:00 PM - 9:00 PM",
   ],
-  deliveryArea: "We deliver within 8 miles of downtown. Free delivery on orders over $35.",
+  deliveryArea: "We deliver within 8 miles of downtown, with complimentary delivery on orders over $35.",
   pickupInstructions:
-    "Pickup orders are available at our kitchen entrance on Main Street. Please have your order confirmation ready. Curbside pickup is available, call us when you arrive and we'll bring it out.",
+    "Pickup is available at our kitchen entrance on Main Street. Have your confirmation ready when you arrive, and call us for curbside handoff if preferred.",
 };
