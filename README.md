@@ -172,6 +172,8 @@ npm run test:backend
 |-- accounts/
 |-- api/
 |-- backend/
+|-- docs/
+|   |-- screenshots/
 |-- marketing/
 |-- menu/
 |-- orders/
