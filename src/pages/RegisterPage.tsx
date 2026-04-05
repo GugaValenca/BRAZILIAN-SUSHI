@@ -6,8 +6,15 @@ import { toast } from "sonner";
 
 import SectionHeading from "@/components/SectionHeading";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const RegisterPage = () => {
+  usePageMeta({
+    title: "Create Account | Brazilian Sushi",
+    description: "Create a Brazilian Sushi customer account to save addresses, favorites, preferences, and order history.",
+    robots: "noindex,nofollow",
+  });
+
   const navigate = useNavigate();
   const { register } = useAuth();
   const [form, setForm] = useState({

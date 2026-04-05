@@ -9,10 +9,16 @@ import MenuCard from "@/components/MenuCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { categories as fallbackCategories, menuItems as fallbackItems } from "@/data/menuData";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { addFavorite, fetchFavorites, removeFavorite, type FavoriteItem } from "@/lib/account";
 import { fetchCategories, fetchMenuItems, normalizeMenuItem } from "@/lib/catalog";
 
 const MenuPage = () => {
+  usePageMeta({
+    title: "Brazilian Sushi Menu | Rolls, Sashimi, Combos & Delivery",
+    description: "Browse the Brazilian Sushi menu with premium rolls, sashimi, combos, vegetarian options, filters, and quick online ordering.",
+  });
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [showSpicy, setShowSpicy] = useState(false);

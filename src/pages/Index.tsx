@@ -6,9 +6,10 @@ import { Phone, ArrowRight, Star, Clock, Shield, Truck } from "lucide-react";
 import heroImage from "@/assets/hero-sushi.jpg";
 import SectionHeading from "@/components/SectionHeading";
 import MenuCard from "@/components/MenuCard";
-import { fetchFeaturedItems, fetchPromotions, fetchReviews, normalizeMenuItem } from "@/lib/catalog";
 import { menuItems } from "@/data/menuData";
+import { fetchFeaturedItems, fetchPromotions, fetchReviews, normalizeMenuItem } from "@/lib/catalog";
 import { businessInfo } from "@/lib/site";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const fallbackFeatured = menuItems.filter((item) => item.featured).slice(0, 4);
 
@@ -20,6 +21,11 @@ const benefits = [
 ];
 
 const Index = () => {
+  usePageMeta({
+    title: "Brazilian Sushi | Premium Sushi Delivery & Takeout",
+    description: "Order premium sushi delivery or pickup from Brazilian Sushi. Explore featured rolls, combos, verified customer benefits, and premium takeout experience.",
+  });
+
   const { data: featuredItems } = useQuery({
     queryKey: ["featured-items"],
     queryFn: fetchFeaturedItems,

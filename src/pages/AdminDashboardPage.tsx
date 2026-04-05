@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import SectionHeading from "@/components/SectionHeading";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import {
   createCoupon,
   createPromotion,
@@ -26,6 +27,12 @@ import {
 const nowIso = new Date().toISOString().slice(0, 16);
 
 const AdminDashboardPage = () => {
+  usePageMeta({
+    title: "Staff Dashboard | Brazilian Sushi",
+    description: "Operational dashboard for Brazilian Sushi staff to manage orders, customers, reviews, promotions, and support.",
+    robots: "noindex,nofollow",
+  });
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, tokens, isAuthenticated } = useAuth();
@@ -168,7 +175,7 @@ const AdminDashboardPage = () => {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="font-semibold">Order #{order.id}</p>
-                        <p className="text-sm text-muted-foreground mt-1">{order.order_type} · {order.status.replaceAll("_", " ")} · ${Number(order.total).toFixed(2)}</p>
+                        <p className="text-sm text-muted-foreground mt-1">{order.order_type} Â· {order.status.replaceAll("_", " ")} Â· ${Number(order.total).toFixed(2)}</p>
                       </div>
                       <span className="text-sm text-primary font-semibold">{order.notification_preference.toUpperCase()}</span>
                     </div>
@@ -192,7 +199,7 @@ const AdminDashboardPage = () => {
                   <div key={customer.id} className="flex items-center justify-between gap-4 border border-border rounded-xl p-4">
                     <div>
                       <p className="font-semibold">{customer.first_name} {customer.last_name}</p>
-                      <p className="text-sm text-muted-foreground mt-1">{customer.email} · Orders completed: {customer.loyalty_completed_orders}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{customer.email} Â· Orders completed: {customer.loyalty_completed_orders}</p>
                     </div>
                     <button
                       type="button"
@@ -213,7 +220,7 @@ const AdminDashboardPage = () => {
                   <div key={review.id} className="border border-border rounded-xl p-4">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="font-semibold">{review.customer_name} · {review.rating} stars</p>
+                        <p className="font-semibold">{review.customer_name} Â· {review.rating} stars</p>
                         <p className="text-sm text-muted-foreground mt-1">{review.title}</p>
                       </div>
                       <span className="text-xs uppercase tracking-wide text-muted-foreground">{review.approval_status}</span>
@@ -286,7 +293,7 @@ const AdminDashboardPage = () => {
                 {contactMessages.map((message) => (
                   <div key={message.id} className="border border-border rounded-xl p-4">
                     <p className="font-semibold">{message.name}</p>
-                    <p className="text-sm text-muted-foreground mt-1">{message.email} {message.phone ? `· ${message.phone}` : ""}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{message.email} {message.phone ? `Â· ${message.phone}` : ""}</p>
                     <p className="text-sm text-muted-foreground mt-3">{message.message}</p>
                     <button type="button" onClick={() => contactMutation.mutate({ messageId: message.id, resolved: !message.resolved })} className="text-sm font-semibold text-primary mt-4">
                       {message.resolved ? "Mark unresolved" : "Mark resolved"}
@@ -303,3 +310,5 @@ const AdminDashboardPage = () => {
 };
 
 export default AdminDashboardPage;
+
+

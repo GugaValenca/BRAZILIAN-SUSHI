@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Phone, Mail, MessageCircle, Clock, MapPin, Send } from "lucide-react";
 
 import SectionHeading from "@/components/SectionHeading";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { submitContactMessage } from "@/lib/catalog";
 import { businessInfo } from "@/lib/site";
 
@@ -22,6 +23,11 @@ const initialFormState = {
 };
 
 const ContactPage = () => {
+  usePageMeta({
+    title: "Contact Brazilian Sushi | Delivery Area, Hours & Support",
+    description: "Contact Brazilian Sushi for delivery questions, pickup instructions, support, business hours, WhatsApp, Telegram, phone, and email.",
+  });
+
   const [formData, setFormData] = useState(initialFormState);
   const [sent, setSent] = useState(false);
 

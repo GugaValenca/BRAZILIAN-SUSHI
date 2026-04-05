@@ -6,8 +6,15 @@ import { toast } from "sonner";
 
 import SectionHeading from "@/components/SectionHeading";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const LoginPage = () => {
+  usePageMeta({
+    title: "Sign In | Brazilian Sushi",
+    description: "Access your Brazilian Sushi account to manage orders, addresses, favorites, and notification preferences.",
+    robots: "noindex,nofollow",
+  });
+
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();

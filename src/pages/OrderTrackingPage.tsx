@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Clock, ShieldCheck, Truck } from "lucide-react";
 
 import SectionHeading from "@/components/SectionHeading";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { trackOrder } from "@/lib/catalog";
 
 const statusLabels: Record<string, string> = {
@@ -19,6 +20,12 @@ const statusLabels: Record<string, string> = {
 const statusSteps = ["received", "confirmed", "preparing", "ready", "out_for_delivery", "delivered"];
 
 const OrderTrackingPage = () => {
+  usePageMeta({
+    title: "Track Order | Brazilian Sushi",
+    description: "Securely track your Brazilian Sushi delivery or pickup order with live status updates.",
+    robots: "noindex,nofollow",
+  });
+
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get("order") ?? "";
   const token = searchParams.get("token") ?? "";

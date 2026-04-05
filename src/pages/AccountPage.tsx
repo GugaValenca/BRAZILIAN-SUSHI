@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import SectionHeading from "@/components/SectionHeading";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import {
   createAddress,
   fetchAddresses,
@@ -32,6 +33,12 @@ const initialAddress = {
 };
 
 const AccountPage = () => {
+  usePageMeta({
+    title: "Your Account | Brazilian Sushi",
+    description: "Manage your Brazilian Sushi profile, saved addresses, favorites, reviews, and order history.",
+    robots: "noindex,nofollow",
+  });
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, tokens, isAuthenticated, refreshProfile } = useAuth();
@@ -256,7 +263,7 @@ const AccountPage = () => {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <p className="font-semibold inline-flex items-center gap-2"><Truck className="w-4 h-4 text-primary" /> Order #{order.id}</p>
-                          <p className="text-sm text-muted-foreground mt-1">{new Date(order.created_at).toLocaleString()} · {order.status.replaceAll("_", " ")}</p>
+                          <p className="text-sm text-muted-foreground mt-1">{new Date(order.created_at).toLocaleString()} Â· {order.status.replaceAll("_", " ")}</p>
                         </div>
                         <span className="font-semibold">${Number(order.total).toFixed(2)}</span>
                       </div>
@@ -298,3 +305,5 @@ const AccountPage = () => {
 };
 
 export default AccountPage;
+
+

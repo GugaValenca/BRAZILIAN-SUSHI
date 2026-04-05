@@ -6,9 +6,16 @@ import { toast } from "sonner";
 
 import SectionHeading from "@/components/SectionHeading";
 import { useCart } from "@/contexts/CartContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { createOrder, fetchDeliveryZones } from "@/lib/catalog";
 
 const CheckoutPage = () => {
+  usePageMeta({
+    title: "Checkout | Brazilian Sushi",
+    description: "Finalize your Brazilian Sushi order with delivery or pickup, preferences, notes, and secure guest checkout.",
+    robots: "noindex,nofollow",
+  });
+
   const navigate = useNavigate();
   const { items, subtotal, updateQuantity, removeItem, clearCart } = useCart();
   const [orderType, setOrderType] = useState<"delivery" | "pickup">("delivery");
@@ -212,4 +219,3 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
-
