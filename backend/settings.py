@@ -5,15 +5,24 @@ from urllib.parse import unquote, urlparse
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-dev-key-change-me")
-DEBUG = os.getenv("DJANGO_DEBUG", "true").lower() == "true"
-ALLOWED_HOSTS = [host for host in os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if host]
-CORS_ALLOWED_ORIGINS = [origin for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://127.0.0.1:8080,http://localhost:8080").split(",") if origin]
-CSRF_TRUSTED_ORIGINS = [origin for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "http://127.0.0.1:8080,http://localhost:8080").split(",") if origin]
+
+def env_str(name: str, default: str = "") -> str:
+    return os.getenv(name, default).strip()
+
+
+def env_list(name: str, default: str = "") -> list[str]:
+    return [item.strip() for item in env_str(name, default).split(",") if item.strip()]
+
+
+SECRET_KEY = env_str("DJANGO_SECRET_KEY", "unsafe-dev-key-change-me")
+DEBUG = env_str("DJANGO_DEBUG", "true").lower() == "true"
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost")
+CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS", "http://127.0.0.1:8080,http://localhost:8080")
+CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "http://127.0.0.1:8080,http://localhost:8080")
 
 
 def build_database_config():
-    database_url = os.getenv("DATABASE_URL", "").strip()
+    database_url = env_str("DATABASE_URL")
     if database_url:
         parsed = urlparse(database_url)
         engine_map = {
@@ -40,19 +49,19 @@ def build_database_config():
             "PASSWORD": unquote(parsed.password or ""),
             "HOST": parsed.hostname or "",
             "PORT": str(parsed.port or ""),
-            "CONN_MAX_AGE": int(os.getenv("DB_CONN_MAX_AGE", "60")),
+            "CONN_MAX_AGE": int(env_str("DB_CONN_MAX_AGE", "60")),
             "OPTIONS": {
-                "sslmode": os.getenv("DB_SSLMODE", "require"),
+                "sslmode": env_str("DB_SSLMODE", "require"),
             },
         }
 
     return {
-        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.getenv("DB_NAME", BASE_DIR / "db.sqlite3"),
-        "USER": os.getenv("DB_USER", ""),
-        "PASSWORD": os.getenv("DB_PASSWORD", ""),
-        "HOST": os.getenv("DB_HOST", ""),
-        "PORT": os.getenv("DB_PORT", ""),
+        "ENGINE": env_str("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": env_str("DB_NAME", str(BASE_DIR / "db.sqlite3")),
+        "USER": env_str("DB_USER"),
+        "PASSWORD": env_str("DB_PASSWORD"),
+        "HOST": env_str("DB_HOST"),
+        "PORT": env_str("DB_PORT"),
     }
 
 
@@ -131,8 +140,8 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "true").lower() == "true"
-    SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "31536000"))
+    SECURE_SSL_REDIRECT = env_str("SECURE_SSL_REDIRECT", "true").lower() == "true"
+    SECURE_HSTS_SECONDS = int(env_str("SECURE_HSTS_SECONDS", "31536000"))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -157,4 +166,4 @@ SIMPLE_JWT = {
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "hello@braziliansushi.com")
+DEFAULT_FROM_EMAIL = env_str("DEFAULT_FROM_EMAIL", "hello@braziliansushi.com")
