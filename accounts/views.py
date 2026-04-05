@@ -3,7 +3,13 @@ from rest_framework import generics, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .serializers import AddressSerializer, FavoriteMenuItemSerializer, RegisterSerializer, UserSerializer
+from .serializers import (
+    AddressSerializer,
+    AdminCustomerSerializer,
+    FavoriteMenuItemSerializer,
+    RegisterSerializer,
+    UserSerializer,
+)
 
 User = get_user_model()
 
@@ -50,3 +56,25 @@ class FavoriteMenuItemViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class CustomerAdminViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by("-date_joined")
+    serializer_class = AdminCustomerSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    @action(detail=True, methods=["post"])
+    def verify(self, request, pk=None):
+        customer = self.get_object()
+        customer.is_verified_customer = True
+        customer.verified_reason = User.VerificationReason.IDENTITY
+        customer.save(update_fields=["is_verified_customer", "verified_reason"])
+        return Response(self.get_serializer(customer).data)
+
+    @action(detail=True, methods=["post"])
+    def remove_verification(self, request, pk=None):
+        customer = self.get_object()
+        customer.is_verified_customer = False
+        customer.verified_reason = User.VerificationReason.NONE
+        customer.save(update_fields=["is_verified_customer", "verified_reason"])
+        return Response(self.get_serializer(customer).data)

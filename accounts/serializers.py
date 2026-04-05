@@ -45,8 +45,32 @@ class UserSerializer(serializers.ModelSerializer):
             "is_verified_customer",
             "verified_reason",
             "loyalty_completed_orders",
+            "is_staff",
         )
-        read_only_fields = ("email", "is_verified_customer", "verified_reason", "loyalty_completed_orders")
+        read_only_fields = ("email", "is_verified_customer", "verified_reason", "loyalty_completed_orders", "is_staff")
+
+
+class AdminCustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "email",
+            "username",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "notification_preference",
+            "sms_opt_in",
+            "email_opt_in",
+            "is_verified_customer",
+            "verified_reason",
+            "loyalty_completed_orders",
+            "is_staff",
+            "is_active",
+            "date_joined",
+        )
+        read_only_fields = ("date_joined",)
 
 
 class AddressSerializer(serializers.ModelSerializer):

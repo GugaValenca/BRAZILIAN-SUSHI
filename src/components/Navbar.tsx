@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, ShoppingBag, User } from "lucide-react";
+import { LayoutDashboard, Menu, Phone, ShoppingBag, User, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -51,6 +51,11 @@ const Navbar = () => {
               </span>
             )}
           </Link>
+          {user?.is_staff && (
+            <Link to="/staff-dashboard" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
+              <LayoutDashboard className="w-4 h-4" /> Staff
+            </Link>
+          )}
           {isAuthenticated ? (
             <>
               <Link to="/account" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
@@ -104,6 +109,11 @@ const Navbar = () => {
                 <span className="inline-flex items-center gap-2"><ShoppingBag className="w-4 h-4" /> Checkout</span>
                 {totalItems > 0 && <span className="text-primary text-sm">{totalItems}</span>}
               </Link>
+              {user?.is_staff && (
+                <Link to="/staff-dashboard" onClick={() => setOpen(false)} className="inline-flex items-center gap-2 text-lg font-medium">
+                  <LayoutDashboard className="w-5 h-5" /> Staff Dashboard
+                </Link>
+              )}
               {isAuthenticated ? (
                 <>
                   <Link to="/account" onClick={() => setOpen(false)} className="inline-flex items-center gap-2 text-lg font-medium">

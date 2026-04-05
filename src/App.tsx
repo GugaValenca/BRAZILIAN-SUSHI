@@ -18,6 +18,7 @@ const OrderTrackingPage = lazy(() => import("./pages/OrderTrackingPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const AccountPage = lazy(() => import("./pages/AccountPage"));
+const AdminDashboardPage = lazy(() => import("./pages/AdminDashboardPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/account" element={<AccountPage />} />
+                <Route path="/staff-dashboard" element={<AdminDashboardPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

@@ -33,11 +33,11 @@ class ReviewSerializer(serializers.ModelSerializer):
             "approval_status",
             "created_at",
         )
-        read_only_fields = ("user", "approval_status", "created_at")
+        read_only_fields = ("user", "created_at")
 
 
 class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactMessage
         fields = "__all__"
-        read_only_fields = ("resolved", "created_at")
+        read_only_fields = ("created_at",)

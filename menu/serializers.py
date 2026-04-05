@@ -49,3 +49,30 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ("id", "name", "slug", "description", "sort_order", "items")
+
+
+class AdminCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ("id", "name", "slug", "description", "sort_order")
+
+
+class AdminMenuItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MenuItem
+        fields = (
+            "id",
+            "category",
+            "name",
+            "slug",
+            "short_description",
+            "description",
+            "price",
+            "image",
+            "spicy",
+            "vegetarian",
+            "featured",
+            "allergens",
+            "calories",
+            "availability",
+        )
