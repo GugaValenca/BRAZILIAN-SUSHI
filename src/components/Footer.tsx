@@ -1,5 +1,7 @@
-import { Facebook, Ghost, Instagram, Music2, type LucideIcon } from "lucide-react";
+import { Facebook, Ghost, Instagram, Mail, Music2, Phone, type LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+
+import { businessInfo } from "@/lib/site";
 
 const socials = [
   { label: "Instagram", href: "https://instagram.com/braziliansushi", icon: Instagram },
@@ -19,39 +21,56 @@ const footerLinks = [
 const Footer = () => (
   <footer className="border-t border-border bg-gradient-card">
     <div className="container py-12 md:py-16">
-      <div className="max-w-6xl mx-auto space-y-10">
-        <div className="text-center max-w-2xl mx-auto">
-          <h3 className="text-2xl md:text-3xl font-display font-bold text-gradient-gold mb-4">Brazilian Sushi</h3>
+      <div className="max-w-6xl mx-auto grid gap-10 md:grid-cols-[0.7fr_1.15fr_0.9fr] md:gap-12">
+        <div className="space-y-4">
+          <h4 className="text-sm uppercase tracking-[0.22em] text-primary/85 font-medium">Navigate</h4>
+          <div className="grid gap-3">
+            {footerLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="max-w-md md:mx-auto md:text-center">
+          <h3 className="text-2xl md:text-3xl font-display font-bold text-gradient-gold mb-4">{businessInfo.name}</h3>
           <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
             Premium sushi crafted with Japanese precision and Brazilian soul, designed exclusively for delivery and takeout.
           </p>
+          <p className="text-muted-foreground text-sm leading-relaxed mt-4">{businessInfo.hoursSummary}</p>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
-          {footerLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className="inline-flex items-center justify-center rounded-full border border-border bg-secondary/70 px-4 py-2 text-sm text-muted-foreground transition-all hover:border-primary/30 hover:text-foreground hover:bg-secondary"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        <div className="flex items-center justify-center gap-4">
-          {socials.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-border/60 bg-secondary/90 flex items-center justify-center transition-all hover:bg-primary/20 hover:border-primary/30"
-              aria-label={social.label}
-            >
-              <social.icon className="w-5 h-5" strokeWidth={1.9} />
+        <div className="space-y-5">
+          <h4 className="text-sm uppercase tracking-[0.22em] text-primary/85 font-medium">Contact</h4>
+          <div className="space-y-3 text-sm text-muted-foreground">
+            <a href={businessInfo.phoneHref} className="inline-flex items-center gap-2 transition-colors hover:text-foreground">
+              <Phone className="w-4 h-4 text-primary" />
+              {businessInfo.phoneDisplay}
             </a>
-          ))}
+            <a href={businessInfo.emailHref} className="inline-flex items-center gap-2 transition-colors hover:text-foreground">
+              <Mail className="w-4 h-4 text-primary" />
+              {businessInfo.email}
+            </a>
+          </div>
+          <div className="flex items-center gap-4 pt-1">
+            {socials.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-border/60 bg-secondary/90 flex items-center justify-center transition-all hover:bg-primary/20 hover:border-primary/30"
+                aria-label={social.label}
+              >
+                <social.icon className="w-5 h-5" strokeWidth={1.9} />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 
