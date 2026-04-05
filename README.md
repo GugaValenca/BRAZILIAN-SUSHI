@@ -138,6 +138,21 @@ npm run check:backend
 npm run test:backend
 ```
 
+## Production Environment
+
+For a professional Vercel deployment with the Django API enabled, configure these variables in the Vercel project:
+
+- `DJANGO_SECRET_KEY`
+- `DJANGO_DEBUG=false`
+- `DJANGO_ALLOWED_HOSTS`
+- `CORS_ALLOWED_ORIGINS`
+- `CSRF_TRUSTED_ORIGINS`
+- `DATABASE_URL`
+- `DB_SSLMODE=require`
+- `DB_CONN_MAX_AGE=60`
+
+The frontend now defaults to `/api` in production, so a separate `VITE_API_BASE_URL` is not required unless you intentionally host the API on another domain.
+
 ## Project Structure
 
 ```text
