@@ -7,4 +7,4 @@ Disallow: /register
 Disallow: /account
 Disallow: /staff-dashboard
 
-Sitemap: https://brazilian-sushi-hub.vercel.app/sitemap.xml
+Sitemap: https://brazilian-sushi.vercel.app/sitemap.xml

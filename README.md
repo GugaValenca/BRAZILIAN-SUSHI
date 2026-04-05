@@ -15,8 +15,8 @@ Premium sushi delivery and takeout platform built for a realistic U.S.-market po
 
 ## Links
 
-- Live Demo: https://brazilian-sushi-hub.vercel.app
-- Repository: https://github.com/GugaValenca/samba-sushi-hub
+- Live Demo: https://brazilian-sushi.vercel.app
+- Repository: https://github.com/GugaValenca/brazilian-sushi
 
 ## Overview
 
@@ -80,8 +80,8 @@ Screenshots were intentionally not versioned in this repository yet to avoid low
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/GugaValenca/samba-sushi-hub.git
-cd samba-sushi-hub
+git clone https://github.com/GugaValenca/brazilian-sushi.git
+cd brazilian-sushi
 ```
 
 ### 2. Install frontend dependencies
