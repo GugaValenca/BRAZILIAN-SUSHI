@@ -20,6 +20,12 @@ const benefits = [
   { icon: Star, title: "Premium Quality", desc: "Selected ingredients and precise preparation" },
 ];
 
+const storyHighlights = [
+  { label: "Prepared to order", value: "Freshly composed in small batches throughout service." },
+  { label: "Japanese precision", value: "Balanced cuts, clean flavors, and careful presentation." },
+  { label: "Brazilian warmth", value: "A subtle house signature that keeps the experience memorable." },
+];
+
 const Index = () => {
   usePageMeta({
     title: "Brazilian Sushi | Premium Sushi Delivery & Takeout",
@@ -119,6 +125,49 @@ const Index = () => {
                 <p className="text-muted-foreground text-xs md:text-sm mt-1">{b.desc}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24">
+        <div className="container">
+          <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-10 items-start max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-gradient-to-br from-card to-card/70 border border-border rounded-[1.75rem] p-8 md:p-10"
+            >
+              <span className="inline-flex items-center gap-3 text-xs uppercase tracking-[0.28em] text-primary/90 font-medium mb-5">
+                <span className="h-px w-8 bg-primary/35" />
+                Who We Are
+              </span>
+              <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight mb-5">
+                Crafted for delivery, designed to feel like a premium table experience at home.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Brazilian Sushi was created around one idea: delivery and takeout should still feel refined, generous, and memorable. Every roll, sashimi cut, and combo is prepared to travel well without losing freshness, texture, or presentation.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Our menu blends Japanese discipline with a subtle Brazilian warmth, giving each order a sense of care from the first click to the final bite.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="grid gap-4"
+            >
+              {storyHighlights.map((item) => (
+                <div key={item.label} className="bg-card border border-border rounded-2xl p-6 md:p-7">
+                  <p className="text-xs uppercase tracking-[0.22em] text-primary/85 font-medium mb-3">{item.label}</p>
+                  <p className="text-foreground/90 leading-relaxed">{item.value}</p>
+                </div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>

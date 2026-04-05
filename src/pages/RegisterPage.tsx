@@ -25,8 +25,6 @@ const RegisterPage = () => {
     phone_number: "",
     password: "",
     notification_preference: "both" as "sms" | "email" | "both",
-    sms_opt_in: true,
-    email_opt_in: true,
   });
 
   const mutation = useMutation({
@@ -50,7 +48,7 @@ const RegisterPage = () => {
         <SectionHeading
           label="Customer Access"
           title="Create Account"
-          subtitle="Save addresses, track orders, manage favorites, and unlock verified customer benefits over time."
+          subtitle="Create your account to save addresses, reorder favorites faster, and build toward verified customer benefits over time."
         />
 
         <form
@@ -113,18 +111,12 @@ const RegisterPage = () => {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-3 text-sm">
-            <label className="inline-flex items-center gap-2">
-              <input type="checkbox" checked={form.sms_opt_in} onChange={(e) => updateField("sms_opt_in", e.target.checked)} /> SMS updates
-            </label>
-            <label className="inline-flex items-center gap-2">
-              <input type="checkbox" checked={form.email_opt_in} onChange={(e) => updateField("email_opt_in", e.target.checked)} /> Email updates
-            </label>
-          </div>
-
           <button type="submit" disabled={mutation.isPending} className="w-full bg-gradient-gold text-primary-foreground py-3.5 rounded-lg font-semibold disabled:opacity-70">
             <span className="inline-flex items-center gap-2"><UserPlus className="w-4 h-4" /> {mutation.isPending ? "Creating account..." : "Create Account"}</span>
           </button>
+          <p className="text-xs text-muted-foreground text-center leading-relaxed">
+            Your account helps us keep checkout smoother, communication preferences consistent, and future orders easier to place.
+          </p>
           <p className="text-sm text-muted-foreground text-center">
             Already registered? <Link to="/login" className="text-primary font-semibold">Sign in</Link>
           </p>

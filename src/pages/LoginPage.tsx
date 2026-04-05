@@ -38,7 +38,7 @@ const LoginPage = () => {
         <SectionHeading
           label="Customer Access"
           title="Sign In"
-          subtitle="Access your orders, favorites, saved addresses, and verified customer benefits."
+          subtitle="Return to your account to follow recent orders, revisit favorites, and keep your checkout details ready for the next order."
         />
 
         <form
@@ -73,6 +73,9 @@ const LoginPage = () => {
           <button type="submit" disabled={mutation.isPending} className="w-full bg-gradient-gold text-primary-foreground py-3.5 rounded-lg font-semibold disabled:opacity-70">
             <span className="inline-flex items-center gap-2"><LogIn className="w-4 h-4" /> {mutation.isPending ? "Signing in..." : "Sign In"}</span>
           </button>
+          <p className="text-xs text-muted-foreground text-center leading-relaxed">
+            Signing in keeps your saved addresses, order history, and notification preferences in one place.
+          </p>
           <p className="text-sm text-muted-foreground text-center">
             New here? <Link to="/register" className="text-primary font-semibold">Create an account</Link>
           </p>
