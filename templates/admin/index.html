@@ -1,0 +1,23 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="bs-admin-hero">
+  <div>
+    <span class="bs-admin-kicker">Control Center</span>
+    <h1>Run the restaurant with clarity.</h1>
+    <p>Manage orders, menu updates, customer records, reviews, and campaigns from a dashboard that matches the quality of the storefront.</p>
+  </div>
+  <div class="bs-admin-hero-panels">
+    <div class="bs-admin-panel-card">
+      <strong>{{ app_list|length }}</strong>
+      <span>Admin modules ready</span>
+    </div>
+    <div class="bs-admin-panel-card">
+      <strong>Live</strong>
+      <span>Production operations enabled</span>
+    </div>
+  </div>
+</div>
+{{ block.super }}
+{% endblock %}

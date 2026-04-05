@@ -1,0 +1,15 @@
+{% extends "admin/login.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="bs-admin-login-shell">
+  <div class="bs-admin-login-copy">
+    <span class="bs-admin-kicker">Staff Access</span>
+    <h1>Brazilian Sushi Admin</h1>
+    <p>Sign in to manage orders, menu availability, promotions, guests, and day-to-day restaurant operations.</p>
+  </div>
+  <div class="bs-admin-login-card">
+    {{ block.super }}
+  </div>
+</div>
+{% endblock %}
