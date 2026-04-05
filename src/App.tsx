@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect } from "react";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -93,6 +93,16 @@ const AppWarmup = () => {
   return null;
 };
 
+const ScrollToTop = () => {
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname, search]);
+
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -102,6 +112,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AppWarmup />
+            <ScrollToTop />
             <Navbar />
             <Suspense fallback={<div className="min-h-screen pt-24 md:pt-28"><div className="container py-16 text-center text-muted-foreground">Loading...</div></div>}>
               <Routes>
