@@ -1,11 +1,12 @@
+import { Facebook, Ghost, Instagram, Music2, type LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const socials = [
-  { label: "Instagram", href: "https://instagram.com/braziliansushi", icon: "📸" },
-  { label: "TikTok", href: "https://tiktok.com/@braziliansushi", icon: "🎵" },
-  { label: "Facebook", href: "https://facebook.com/braziliansushi", icon: "👤" },
-  { label: "Snapchat", href: "https://snapchat.com/add/braziliansushi", icon: "👻" },
-];
+  { label: "Instagram", href: "https://instagram.com/braziliansushi", icon: Instagram },
+  { label: "TikTok", href: "https://tiktok.com/@braziliansushi", icon: Music2 },
+  { label: "Facebook", href: "https://facebook.com/braziliansushi", icon: Facebook },
+  { label: "Snapchat", href: "https://snapchat.com/add/braziliansushi", icon: Ghost },
+] satisfies Array<{ label: string; href: string; icon: LucideIcon }>;
 
 const Footer = () => (
   <footer className="border-t border-border bg-card">
@@ -42,7 +43,7 @@ const Footer = () => (
                 className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary/20 transition-colors"
                 aria-label={s.label}
               >
-                <span className="text-lg">{s.icon}</span>
+                <s.icon className="w-5 h-5" strokeWidth={1.9} />
               </a>
             ))}
           </div>
