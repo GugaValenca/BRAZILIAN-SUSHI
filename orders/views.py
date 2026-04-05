@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
@@ -28,6 +29,14 @@ class OrderViewSet(viewsets.ModelViewSet):
             return CreateOrderSerializer
         return OrderSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        order = serializer.save()
+        response_serializer = OrderSerializer(order, context={"request": request})
+        headers = self.get_success_headers(response_serializer.data)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def get_queryset(self):
         queryset = super().get_queryset()
         user = self.request.user
@@ -53,7 +62,7 @@ class OrderViewSet(viewsets.ModelViewSet):
                 "coupon",
                 "delivery_zone",
             ).get(pk=order_id, tracking_token=token)
-        except Order.DoesNotExist:
+        except (Order.DoesNotExist, ValidationError, ValueError):
             return Response({"detail": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
 
         return Response(OrderSerializer(order, context={"request": request}).data)
