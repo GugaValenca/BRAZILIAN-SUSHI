@@ -32,8 +32,8 @@ const Navbar = () => {
             <Link
               key={l.to}
               to={l.to}
-              className={`text-sm font-medium tracking-wide uppercase transition-colors hover:text-primary ${
-                pathname === l.to ? "text-primary" : "text-foreground/70"
+              className={`relative text-sm font-medium tracking-wide uppercase transition-colors hover:text-primary after:absolute after:left-0 after:-bottom-2 after:h-px after:w-full after:origin-center after:scale-x-0 after:bg-primary/70 after:transition-transform ${
+                pathname === l.to ? "text-primary after:scale-x-100" : "text-foreground/70 hover:after:scale-x-100"
               }`}
             >
               {l.label}
@@ -63,7 +63,7 @@ const Navbar = () => {
           )}
           <Link
             to="/checkout"
-            className="relative inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="relative inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-95 hover:shadow-[0_14px_30px_rgba(160,122,44,0.22)] transition-all"
           >
             <ShoppingBag className="w-4 h-4" />
             Checkout

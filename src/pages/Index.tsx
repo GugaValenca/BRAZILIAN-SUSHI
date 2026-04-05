@@ -70,7 +70,10 @@ const Index = () => {
         </div>
         <div className="container relative z-10">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-2xl">
-            <span className="inline-block text-primary text-sm uppercase tracking-[0.25em] font-medium mb-4">Delivery & Takeout</span>
+            <span className="inline-flex items-center gap-3 text-primary text-sm uppercase tracking-[0.25em] font-medium mb-4">
+              <span className="h-px w-10 bg-primary/40" />
+              Delivery & Takeout
+            </span>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] mb-6">
               Japanese Art, <span className="text-gradient-gold">Brazilian Soul</span>
             </h1>
@@ -80,14 +83,14 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 to="/menu"
-                className="inline-flex items-center justify-center gap-2 bg-gradient-gold text-primary-foreground px-8 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-gold text-primary-foreground px-8 py-4 rounded-lg font-semibold text-lg hover:opacity-95 hover:shadow-[0_18px_40px_rgba(160,122,44,0.22)] transition-all"
               >
                 View Menu
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <a
                 href={businessInfo.phoneHref}
-                className="inline-flex items-center justify-center gap-2 border border-primary/40 text-foreground px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary/10 transition-colors"
+                className="inline-flex items-center justify-center gap-2 border border-primary/40 text-foreground px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary/10 hover:border-primary/60 transition-all"
               >
                 <Phone className="w-5 h-5" />
                 Call to Order

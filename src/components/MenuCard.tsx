@@ -28,7 +28,7 @@ const MenuCard = ({ item, index = 0, onAddToCart, isFavorite = false, onToggleFa
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-40px" }}
     transition={{ duration: 0.5, delay: index * 0.08 }}
-    className="group bg-card rounded-xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300"
+    className="group bg-card rounded-xl overflow-hidden border border-border hover:border-primary/30 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] transition-all duration-300"
   >
     <div className="relative aspect-square overflow-hidden bg-secondary/40">
       <img
@@ -39,6 +39,7 @@ const MenuCard = ({ item, index = 0, onAddToCart, isFavorite = false, onToggleFa
         decoding="async"
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
       />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/45 via-transparent to-transparent opacity-70 pointer-events-none" />
       {item.featured && (
         <span className="absolute top-3 left-3 bg-gradient-gold text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
           Featured
@@ -84,7 +85,7 @@ const MenuCard = ({ item, index = 0, onAddToCart, isFavorite = false, onToggleFa
         <button
           type="button"
           onClick={() => onAddToCart?.(item)}
-          className="bg-gradient-gold text-primary-foreground text-sm font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+          className="bg-gradient-gold text-primary-foreground text-sm font-semibold px-4 py-2 rounded-lg hover:opacity-95 hover:shadow-[0_12px_30px_rgba(160,122,44,0.25)] transition-all"
         >
           Add to Cart
         </button>

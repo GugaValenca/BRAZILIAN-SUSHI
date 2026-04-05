@@ -8,14 +8,14 @@ const FloatingButtons = () => (
       href={businessInfo.whatsappHref}
       target="_blank"
       rel="noopener noreferrer"
-      className="w-14 h-14 rounded-full bg-sushi-green flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+      className="w-14 h-14 rounded-full bg-sushi-green/95 backdrop-blur-sm flex items-center justify-center shadow-[0_16px_35px_rgba(17,24,39,0.32)] hover:scale-110 hover:-translate-y-0.5 transition-all"
       aria-label="WhatsApp"
     >
       <MessageCircle className="w-6 h-6 text-foreground" />
     </a>
     <a
       href={businessInfo.phoneHref}
-      className="w-14 h-14 rounded-full bg-gradient-gold flex items-center justify-center shadow-lg hover:scale-110 transition-transform md:hidden"
+      className="w-14 h-14 rounded-full bg-gradient-gold flex items-center justify-center shadow-[0_16px_35px_rgba(17,24,39,0.32)] hover:scale-110 hover:-translate-y-0.5 transition-all md:hidden"
       aria-label="Call"
     >
       <Phone className="w-6 h-6 text-primary-foreground" />
