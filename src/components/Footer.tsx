@@ -42,7 +42,10 @@ const Footer = () => (
           <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
             Premium sushi crafted with Japanese precision and Brazilian soul, designed exclusively for delivery and takeout.
           </p>
-          <p className="text-muted-foreground text-sm leading-relaxed mt-4">{businessInfo.hoursSummary}</p>
+          <div className="mt-5 inline-flex max-w-sm flex-col rounded-2xl border border-primary/20 bg-secondary/70 px-5 py-4 shadow-[0_18px_45px_-28px_hsl(var(--primary)/0.45)]">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary/85">Open Hours</span>
+            <p className="mt-2 text-sm font-medium leading-relaxed text-foreground">{businessInfo.hoursSummary}</p>
+          </div>
         </div>
 
         <div className="space-y-5">
@@ -75,7 +78,7 @@ const Footer = () => (
       </div>
 
       <div className="divider-gold mt-10 mb-6" />
-      <p className="text-center text-xs text-muted-foreground">© {new Date().getFullYear()} Brazilian Sushi. All rights reserved.</p>
+      <p className="text-center text-xs text-muted-foreground">Copyright {new Date().getFullYear()} Brazilian Sushi. All rights reserved.</p>
     </div>
   </footer>
 );
