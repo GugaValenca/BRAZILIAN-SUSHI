@@ -19,9 +19,6 @@
   <a href="https://brazilian-sushi.vercel.app">
     <img alt="Live Demo" src="https://img.shields.io/badge/Live_Demo-Brazilian_Sushi-B22222?style=for-the-badge&logo=vercel&logoColor=white" />
   </a>
-  <a href="https://github.com/GugaValenca/BRAZILIAN-SUSHI">
-    <img alt="Repository" src="https://img.shields.io/badge/Repository-GitHub-111827?style=for-the-badge&logo=github&logoColor=white" />
-  </a>
 </p>
 
 ## 🍣 About The Project
