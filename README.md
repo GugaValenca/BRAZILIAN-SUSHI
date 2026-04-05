@@ -24,15 +24,15 @@
   </a>
 </p>
 
-## Overview
+## 🍣 About The Project
 
 Brazilian Sushi was designed as a premium restaurant ordering experience focused on delivery and pickup. The product balances refined branding, conversion-oriented UX, and operational practicality, covering the customer journey from menu browsing to checkout, tracking, account management, and staff-side order handling.
 
 The project was intentionally built to stay realistic and interview-friendly: modern frontend architecture, a clean Django API, practical security decisions, and a feature set that feels credible for a professional portfolio without unnecessary enterprise complexity.
 
-## Features
+## ✨ Key Features
 
-### Customer Experience
+### 🛍️ Ordering Experience
 
 - Premium home page with featured items, promotions, reviews, business highlights, and clear conversion paths
 - Searchable menu with categories, combos, favorites, dietary and allergen labels, and add-to-cart flow
@@ -40,7 +40,7 @@ The project was intentionally built to stay realistic and interview-friendly: mo
 - Secure guest order tracking through a tracking token
 - Customer account with saved addresses, favorites, order history, profile settings, and review submission for verified customers
 
-### Business and Staff Operations
+### 🧑‍🍳 Restaurant Operations
 
 - Django admin plus a custom staff dashboard for queue visibility and quick status updates
 - Order lifecycle support across received, confirmed, preparing, ready, out for delivery, and delivered states
@@ -48,7 +48,7 @@ The project was intentionally built to stay realistic and interview-friendly: mo
 - Review moderation, promotions, coupons, and contact-message handling
 - Health endpoint and production-ready environment setup for deployment verification
 
-### SEO and Production Readiness
+### 🚀 SEO and Production Readiness
 
 - Route-aware metadata strategy for public and private pages
 - `robots.txt`, `sitemap.xml`, and `site.webmanifest`
@@ -56,7 +56,7 @@ The project was intentionally built to stay realistic and interview-friendly: mo
 - Custom favicon configured in `public/favicon.ico`
 - Vercel deployment with Django API support and PostgreSQL-backed production setup
 
-## Screenshots
+## 📸 Application Screenshots
 
 Add your final screenshots to `docs/screenshots/` using the file names below:
 
@@ -76,7 +76,7 @@ README-ready links:
 ![Staff Dashboard](docs/screenshots/staff-dashboard.png)
 ```
 
-## Tech Stack
+## 🛠 Technology Stack
 
 ### Frontend
 
@@ -102,7 +102,7 @@ README-ready links:
 - Vercel
 - Neon PostgreSQL
 
-## Installation
+## ⚙️ Local Setup
 
 ### 1. Clone the repository
 
@@ -136,7 +136,7 @@ python manage.py migrate
 python manage.py seed_brazilian_sushi
 ```
 
-## Usage
+## ▶️ Running The Project
 
 ### Frontend
 
@@ -165,7 +165,7 @@ npm run check:backend
 npm run test:backend
 ```
 
-## Project Structure
+## 🧱 Project Structure
 
 ```text
 .
@@ -188,31 +188,31 @@ npm run test:backend
 |-- vercel.json
 ```
 
-## Technical Highlights / What I Learned
+## 🧠 Technical Highlights
 
 - Built a realistic fullstack ordering flow with clear separation between storefront, customer account, and staff operations
 - Applied practical security decisions such as token-based guest tracking instead of exposing raw order access
 - Designed a portfolio-ready product that stays explainable in interviews while still covering meaningful business workflows
 - Strengthened production readiness with deployment validation, public metadata strategy, and PostgreSQL-backed configuration
 
-## Future Improvements
+## 🔮 Future Improvements
 
 - Integrate transactional email and SMS providers for live customer notifications
 - Add payment processing for a fully online checkout flow
 - Expand reporting around delivery performance, campaign results, and revenue trends
 - Add curated README screenshots once the final visual capture set is prepared
 
-## Contributing
+## 🤝 Contributing
 
 This repository is maintained as a portfolio project, but thoughtful suggestions and improvements are welcome through issues or pull requests.
 
-## License
+## 📄 License
 
 This project is available under the MIT License. Add a `LICENSE` file if you want the repository to be explicitly licensed for public distribution.
 
-## Contact
+## 📬 Contact
 
-<p align="left">
+<p align="center">
   <a href="https://github.com/GugaValenca">
     <img alt="GitHub" src="https://img.shields.io/badge/GitHub-GugaValenca-181717?style=for-the-badge&logo=github&logoColor=white" />
   </a>
