@@ -1,29 +1,31 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+import { useCart } from "@/contexts/CartContext";
+import { businessInfo } from "@/lib/site";
 
 const links = [
   { to: "/", label: "Home" },
   { to: "/menu", label: "Menu" },
   { to: "/contact", label: "Contact" },
+  { to: "/track-order", label: "Track Order" },
 ];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const { totalItems } = useCart();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="container flex items-center justify-between h-16 md:h-20">
         <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl md:text-3xl font-display font-bold text-gradient-gold">
-            Brazilian Sushi
-          </span>
+          <span className="text-2xl md:text-3xl font-display font-bold text-gradient-gold">{businessInfo.name}</span>
         </Link>
 
-        {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {links.map((l) => (
             <Link
               key={l.to}
@@ -35,8 +37,20 @@ const Navbar = () => {
               {l.label}
             </Link>
           ))}
+          <Link
+            to="/checkout"
+            className="relative inline-flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-semibold hover:border-primary/30"
+          >
+            <ShoppingBag className="w-4 h-4" />
+            Checkout
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-gradient-gold text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </Link>
           <a
-            href="tel:+15551234567"
+            href={businessInfo.phoneHref}
             className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             <Phone className="w-4 h-4" />
@@ -44,17 +58,11 @@ const Navbar = () => {
           </a>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden text-foreground p-2"
-          aria-label="Toggle menu"
-        >
+        <button onClick={() => setOpen(!open)} className="md:hidden text-foreground p-2" aria-label="Toggle menu">
           {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -76,8 +84,12 @@ const Navbar = () => {
                   {l.label}
                 </Link>
               ))}
+              <Link to="/checkout" onClick={() => setOpen(false)} className="inline-flex items-center justify-between border border-border px-5 py-3 rounded-lg font-semibold">
+                <span className="inline-flex items-center gap-2"><ShoppingBag className="w-4 h-4" /> Checkout</span>
+                {totalItems > 0 && <span className="text-primary text-sm">{totalItems}</span>}
+              </Link>
               <a
-                href="tel:+15551234567"
+                href={businessInfo.phoneHref}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-gold text-primary-foreground px-5 py-3 rounded-lg font-semibold mt-2"
               >
                 <Phone className="w-4 h-4" />

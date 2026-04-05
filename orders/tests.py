@@ -65,3 +65,44 @@ class OrderStatusWorkflowTests(APITestCase):
         self.assertEqual(self.customer.loyalty_completed_orders, 5)
         self.assertTrue(self.customer.is_verified_customer)
         self.assertEqual(self.customer.verified_reason, User.VerificationReason.ORDER_HISTORY)
+
+
+class GuestOrderSecurityTests(APITestCase):
+    def setUp(self):
+        category = Category.objects.create(name="Nigiri", slug="nigiri")
+        self.menu_item = MenuItem.objects.create(
+            category=category,
+            name="Salmon Nigiri",
+            slug="salmon-nigiri",
+            short_description="Fresh salmon",
+            price=Decimal("12.00"),
+        )
+        self.order = Order.objects.create(
+            order_type=Order.OrderType.PICKUP,
+            guest_name="Guest Customer",
+            guest_email="guest@braziliansushi.com",
+            guest_phone="5551234567",
+            subtotal=Decimal("12.00"),
+            total=Decimal("12.00"),
+        )
+        self.order.items.create(
+            menu_item=self.menu_item,
+            quantity=1,
+            unit_price=Decimal("12.00"),
+            line_total=Decimal("12.00"),
+        )
+
+    def test_guest_cannot_list_all_orders(self):
+        response = self.client.get(reverse("order-list"))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 0)
+
+    def test_guest_can_track_order_with_valid_token(self):
+        response = self.client.get(
+            reverse("order-track"),
+            {"order_id": self.order.id, "token": str(self.order.tracking_token)},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["id"], self.order.id)
+        self.assertEqual(response.data["tracking_token"], str(self.order.tracking_token))

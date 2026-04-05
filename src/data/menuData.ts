@@ -3,7 +3,7 @@ import sushiRoll from "@/assets/sushi-roll.jpg";
 import sushiSashimi from "@/assets/sushi-sashimi.jpg";
 import sushiSoup from "@/assets/sushi-soup.jpg";
 import sushiCombo from "@/assets/sushi-combo.jpg";
-import type { MenuItem } from "@/components/MenuCard";
+import type { NormalizedMenuItem } from "@/lib/catalog";
 
 export const categories = [
   "All",
@@ -15,9 +15,10 @@ export const categories = [
   "Beverages",
 ];
 
-export const menuItems: MenuItem[] = [
+export const menuItems: NormalizedMenuItem[] = [
   {
     id: "1",
+    apiId: 1,
     name: "Salmon Nigiri",
     description: "Fresh Atlantic salmon over seasoned sushi rice, finished with a light citrus glaze.",
     price: 8.99,
@@ -28,6 +29,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "2",
+    apiId: 2,
     name: "Tuna Nigiri",
     description: "Premium bluefin tuna nigiri with a touch of wasabi between fish and rice.",
     price: 10.99,
@@ -37,6 +39,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "3",
+    apiId: 3,
     name: "Dragon Roll",
     description: "Shrimp tempura inside, topped with avocado and eel sauce. A house favorite.",
     price: 16.99,
@@ -48,6 +51,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "4",
+    apiId: 4,
     name: "Spicy Tuna Roll",
     description: "Diced spicy tuna with cucumber and sriracha mayo, topped with tobiko.",
     price: 14.99,
@@ -58,6 +62,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "5",
+    apiId: 5,
     name: "Brazilian Roll",
     description: "Cream cheese, mango, and grilled salmon with passion fruit drizzle. Our signature.",
     price: 18.99,
@@ -68,6 +73,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "6",
+    apiId: 6,
     name: "Veggie Garden Roll",
     description: "Avocado, cucumber, carrot, and asparagus with ponzu sauce.",
     price: 11.99,
@@ -77,8 +83,9 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "7",
+    apiId: 7,
     name: "Sashimi Deluxe",
-    description: "Chef's selection of premium sashimi — tuna, salmon, yellowtail, and octopus.",
+    description: "Chef's selection of premium sashimi, tuna, salmon, yellowtail, and octopus.",
     price: 24.99,
     image: sushiSashimi,
     category: "Sashimi",
@@ -87,6 +94,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "8",
+    apiId: 8,
     name: "Salmon Sashimi",
     description: "Six slices of fresh Norwegian salmon, served with pickled ginger.",
     price: 14.99,
@@ -96,6 +104,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "9",
+    apiId: 9,
     name: "Miso Soup",
     description: "Traditional dashi broth with silken tofu, wakame seaweed, and green onion.",
     price: 4.99,
@@ -106,6 +115,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "10",
+    apiId: 10,
     name: "Edamame",
     description: "Steamed young soybeans with sea salt. Simple and addictive.",
     price: 5.99,
@@ -116,8 +126,9 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "11",
+    apiId: 11,
     name: "Sushi Party Box",
-    description: "30 pieces — assorted nigiri, rolls, and sashimi. Perfect for sharing.",
+    description: "30 pieces, assorted nigiri, rolls, and sashimi. Perfect for sharing.",
     price: 49.99,
     image: sushiCombo,
     category: "Combos",
@@ -126,6 +137,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     id: "12",
+    apiId: 12,
     name: "Date Night Combo",
     description: "16 pieces of chef's choice rolls with miso soup and edamame for two.",
     price: 36.99,

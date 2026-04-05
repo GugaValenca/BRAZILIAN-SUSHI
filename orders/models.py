@@ -1,3 +1,4 @@
+import uuid
 from decimal import Decimal
 
 from django.conf import settings
@@ -39,6 +40,7 @@ class Order(models.Model):
     delivery_address = models.ForeignKey("accounts.Address", null=True, blank=True, on_delete=models.SET_NULL, related_name="orders")
     coupon = models.ForeignKey("marketing.Coupon", null=True, blank=True, on_delete=models.SET_NULL, related_name="orders")
     delivery_zone = models.ForeignKey(DeliveryZone, null=True, blank=True, on_delete=models.SET_NULL)
+    tracking_token = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
     order_type = models.CharField(max_length=20, choices=OrderType.choices)
     status = models.CharField(max_length=30, choices=Status.choices, default=Status.RECEIVED)
     guest_name = models.CharField(max_length=120, blank=True)

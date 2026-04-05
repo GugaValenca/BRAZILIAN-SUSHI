@@ -1,9 +1,11 @@
 import { Phone, MessageCircle } from "lucide-react";
 
+import { businessInfo } from "@/lib/site";
+
 const FloatingButtons = () => (
   <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-3">
     <a
-      href="https://wa.me/15551234567"
+      href={businessInfo.whatsappHref}
       target="_blank"
       rel="noopener noreferrer"
       className="w-14 h-14 rounded-full bg-sushi-green flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
@@ -12,7 +14,7 @@ const FloatingButtons = () => (
       <MessageCircle className="w-6 h-6 text-foreground" />
     </a>
     <a
-      href="tel:+15551234567"
+      href={businessInfo.phoneHref}
       className="w-14 h-14 rounded-full bg-gradient-gold flex items-center justify-center shadow-lg hover:scale-110 transition-transform md:hidden"
       aria-label="Call"
     >

@@ -1,29 +1,52 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Search, Flame, Leaf, Filter } from "lucide-react";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+
 import SectionHeading from "@/components/SectionHeading";
 import MenuCard from "@/components/MenuCard";
-import { categories, menuItems } from "@/data/menuData";
+import { useCart } from "@/contexts/CartContext";
+import { categories as fallbackCategories, menuItems as fallbackItems } from "@/data/menuData";
+import { fetchCategories, fetchMenuItems, normalizeMenuItem } from "@/lib/catalog";
 
 const MenuPage = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [showSpicy, setShowSpicy] = useState(false);
   const [showVeg, setShowVeg] = useState(false);
+  const { addItem } = useCart();
+
+  const { data: menuApiItems, isLoading } = useQuery({
+    queryKey: ["menu-items"],
+    queryFn: () => fetchMenuItems(),
+  });
+
+  const { data: categoriesApi } = useQuery({
+    queryKey: ["menu-categories"],
+    queryFn: fetchCategories,
+  });
+
+  const categories = useMemo(() => {
+    const liveCategories = categoriesApi?.map((category) => category.name) ?? [];
+    return liveCategories.length ? ["All", ...liveCategories] : fallbackCategories;
+  }, [categoriesApi]);
+
+  const sourceItems = useMemo(() => {
+    return menuApiItems?.length ? menuApiItems.map(normalizeMenuItem) : fallbackItems;
+  }, [menuApiItems]);
 
   const filtered = useMemo(() => {
-    let items = menuItems;
-    if (activeCategory !== "All") items = items.filter((i) => i.category === activeCategory);
-    if (showSpicy) items = items.filter((i) => i.spicy);
-    if (showVeg) items = items.filter((i) => i.vegetarian);
+    let items = sourceItems;
+    if (activeCategory !== "All") items = items.filter((item) => item.category === activeCategory);
+    if (showSpicy) items = items.filter((item) => item.spicy);
+    if (showVeg) items = items.filter((item) => item.vegetarian);
     if (search.trim()) {
       const q = search.toLowerCase();
-      items = items.filter(
-        (i) => i.name.toLowerCase().includes(q) || i.description.toLowerCase().includes(q)
-      );
+      items = items.filter((item) => item.name.toLowerCase().includes(q) || item.description.toLowerCase().includes(q));
     }
     return items;
-  }, [activeCategory, search, showSpicy, showVeg]);
+  }, [activeCategory, search, showSpicy, showVeg, sourceItems]);
 
   return (
     <div className="min-h-screen pt-24 md:pt-28 pb-16">
@@ -31,10 +54,9 @@ const MenuPage = () => {
         <SectionHeading
           label="Our Selection"
           title="The Menu"
-          subtitle="Handcrafted with the finest ingredients. Something for every palate."
+          subtitle="Handcrafted with the finest ingredients. Browse a live catalog backed by the restaurant API."
         />
 
-        {/* Search & Filters */}
         <div className="max-w-3xl mx-auto mb-10 space-y-4">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -49,17 +71,17 @@ const MenuPage = () => {
 
           <div className="flex items-center gap-3 flex-wrap">
             <Filter className="w-4 h-4 text-muted-foreground" />
-            {categories.map((c) => (
+            {categories.map((category) => (
               <button
-                key={c}
-                onClick={() => setActiveCategory(c)}
+                key={category}
+                onClick={() => setActiveCategory(category)}
                 className={`text-sm px-4 py-2 rounded-full border transition-all ${
-                  activeCategory === c
+                  activeCategory === category
                     ? "bg-gradient-gold text-primary-foreground border-primary"
                     : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
                 }`}
               >
-                {c}
+                {category}
               </button>
             ))}
           </div>
@@ -84,19 +106,35 @@ const MenuPage = () => {
           </div>
         </div>
 
-        {/* Items grid */}
-        {filtered.length > 0 ? (
+        {isLoading && !menuApiItems?.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filtered.map((item, i) => (
-              <MenuCard key={item.id} item={item} index={i} />
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div key={index} className="bg-card rounded-xl border border-border overflow-hidden animate-pulse">
+                <div className="aspect-square bg-secondary" />
+                <div className="p-4 space-y-3">
+                  <div className="h-5 bg-secondary rounded" />
+                  <div className="h-4 bg-secondary rounded" />
+                  <div className="h-4 w-1/2 bg-secondary rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filtered.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filtered.map((item, index) => (
+              <MenuCard
+                key={item.id}
+                item={item}
+                index={index}
+                onAddToCart={(selectedItem) => {
+                  addItem(selectedItem);
+                  toast.success(`${selectedItem.name} added to cart`);
+                }}
+              />
             ))}
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-20"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
             <p className="text-muted-foreground text-lg">No items found. Try adjusting your filters.</p>
           </motion.div>
         )}

@@ -1,21 +1,46 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
 import { Phone, Mail, MessageCircle, Clock, MapPin, Send } from "lucide-react";
+
 import SectionHeading from "@/components/SectionHeading";
+import { submitContactMessage } from "@/lib/catalog";
+import { businessInfo } from "@/lib/site";
 
 const contactInfo = [
-  { icon: Phone, label: "Phone", value: "(555) 123-4567", href: "tel:+15551234567" },
-  { icon: Mail, label: "Email", value: "hello@braziliansushi.com", href: "mailto:hello@braziliansushi.com" },
-  { icon: MessageCircle, label: "WhatsApp", value: "Chat with us", href: "https://wa.me/15551234567" },
-  { icon: MessageCircle, label: "Telegram", value: "@braziliansushi", href: "https://t.me/braziliansushi" },
+  { icon: Phone, label: "Phone", value: businessInfo.phoneDisplay, href: businessInfo.phoneHref },
+  { icon: Mail, label: "Email", value: businessInfo.email, href: businessInfo.emailHref },
+  { icon: MessageCircle, label: "WhatsApp", value: "Chat with us", href: businessInfo.whatsappHref },
+  { icon: MessageCircle, label: "Telegram", value: "@braziliansushi", href: businessInfo.telegramHref },
 ];
 
+const initialFormState = {
+  name: "",
+  email: "",
+  phone: "",
+  message: "",
+};
+
 const ContactPage = () => {
+  const [formData, setFormData] = useState(initialFormState);
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSent(true);
+  const contactMutation = useMutation({
+    mutationFn: submitContactMessage,
+    onSuccess: () => {
+      setSent(true);
+      setFormData(initialFormState);
+    },
+  });
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSent(false);
+    contactMutation.mutate(formData);
+  };
+
+  const handleFieldChange = (field: keyof typeof initialFormState, value: string) => {
+    setFormData((current) => ({ ...current, [field]: value }));
   };
 
   return (
@@ -24,11 +49,10 @@ const ContactPage = () => {
         <SectionHeading
           label="Reach Out"
           title="Contact Us"
-          subtitle="Questions, catering inquiries, or feedback — we'd love to hear from you."
+          subtitle="Questions, catering inquiries, or feedback. Send a real message directly to the restaurant inbox."
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          {/* Info */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -57,8 +81,9 @@ const ContactPage = () => {
                 <div>
                   <h4 className="font-semibold text-sm">Business Hours</h4>
                   <p className="text-muted-foreground text-sm mt-1">
-                    Mon – Sat: 11:00 AM – 10:00 PM<br />
-                    Sunday: 12:00 PM – 9:00 PM
+                    {businessInfo.hoursDetailed[0]}
+                    <br />
+                    {businessInfo.hoursDetailed[1]}
                   </p>
                 </div>
               </div>
@@ -66,38 +91,25 @@ const ContactPage = () => {
                 <MapPin className="w-5 h-5 text-primary mt-0.5" />
                 <div>
                   <h4 className="font-semibold text-sm">Delivery Area</h4>
-                  <p className="text-muted-foreground text-sm mt-1">
-                    We deliver within 8 miles of downtown. Free delivery on orders over $35.
-                  </p>
+                  <p className="text-muted-foreground text-sm mt-1">{businessInfo.deliveryArea}</p>
                 </div>
               </div>
             </div>
 
             <div className="bg-card border border-border rounded-xl p-6">
               <h4 className="font-semibold text-sm mb-2">Pickup Instructions</h4>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Pickup orders are available at our kitchen entrance on Main Street. 
-                Please have your order confirmation ready. Curbside pickup is available — 
-                call us when you arrive and we'll bring it out.
-              </p>
+              <p className="text-muted-foreground text-sm leading-relaxed">{businessInfo.pickupInstructions}</p>
             </div>
           </motion.div>
 
-          {/* Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
             {sent ? (
               <div className="bg-card border border-primary/20 rounded-xl p-10 text-center">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                   <Send className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-display font-bold mb-2">Message Sent!</h3>
-                <p className="text-muted-foreground text-sm">
-                  Thank you for reaching out. We'll get back to you within 24 hours.
-                </p>
+                <h3 className="text-xl font-display font-bold mb-2">Message Sent</h3>
+                <p className="text-muted-foreground text-sm">Thank you for reaching out. We will get back to you within 24 hours.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="bg-card border border-border rounded-xl p-6 md:p-8 space-y-5">
@@ -106,6 +118,8 @@ const ContactPage = () => {
                   <input
                     required
                     type="text"
+                    value={formData.name}
+                    onChange={(e) => handleFieldChange("name", e.target.value)}
                     placeholder="Your name"
                     className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
                   />
@@ -115,6 +129,8 @@ const ContactPage = () => {
                   <input
                     required
                     type="email"
+                    value={formData.email}
+                    onChange={(e) => handleFieldChange("email", e.target.value)}
                     placeholder="you@email.com"
                     className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
                   />
@@ -123,6 +139,8 @@ const ContactPage = () => {
                   <label className="text-sm font-medium text-foreground block mb-1.5">Phone (optional)</label>
                   <input
                     type="tel"
+                    value={formData.phone}
+                    onChange={(e) => handleFieldChange("phone", e.target.value)}
                     placeholder="(555) 000-0000"
                     className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
                   />
@@ -132,15 +150,21 @@ const ContactPage = () => {
                   <textarea
                     required
                     rows={4}
+                    value={formData.message}
+                    onChange={(e) => handleFieldChange("message", e.target.value)}
                     placeholder="How can we help?"
                     className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors resize-none"
                   />
                 </div>
+                {contactMutation.isError && (
+                  <p className="text-sm text-destructive">We could not send your message right now. Please try again in a moment.</p>
+                )}
                 <button
                   type="submit"
-                  className="w-full bg-gradient-gold text-primary-foreground py-3.5 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                  disabled={contactMutation.isPending}
+                  className="w-full bg-gradient-gold text-primary-foreground py-3.5 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-70"
                 >
-                  Send Message
+                  {contactMutation.isPending ? "Sending..." : "Send Message"}
                 </button>
               </form>
             )}

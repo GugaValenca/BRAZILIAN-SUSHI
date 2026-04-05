@@ -6,9 +6,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
+import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import MenuPage from "./pages/MenuPage";
 import ContactPage from "./pages/ContactPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import OrderTrackingPage from "./pages/OrderTrackingPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -16,19 +19,23 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Footer />
-        <FloatingButtons />
-      </BrowserRouter>
+      <CartProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/menu" element={<MenuPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/track-order" element={<OrderTrackingPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Footer />
+          <FloatingButtons />
+        </BrowserRouter>
+      </CartProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

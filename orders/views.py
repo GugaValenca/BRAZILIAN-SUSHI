@@ -30,9 +30,33 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.request.user.is_authenticated and not self.request.user.is_staff:
-            queryset = queryset.filter(customer=self.request.user)
-        return queryset
+        user = self.request.user
+        if user.is_staff:
+            return queryset
+        if user.is_authenticated:
+            return queryset.filter(customer=user)
+        if self.action == "track":
+            return queryset
+        return queryset.none()
+
+    @action(detail=False, methods=["get"], permission_classes=[permissions.AllowAny])
+    def track(self, request):
+        order_id = request.query_params.get("order_id")
+        token = request.query_params.get("token")
+        if not order_id or not token:
+            return Response({"detail": "order_id and token are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            order = Order.objects.prefetch_related("items__selections", "status_events").select_related(
+                "customer",
+                "delivery_address",
+                "coupon",
+                "delivery_zone",
+            ).get(pk=order_id, tracking_token=token)
+        except Order.DoesNotExist:
+            return Response({"detail": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(OrderSerializer(order, context={"request": request}).data)
 
     @action(detail=True, methods=["post"], permission_classes=[permissions.IsAuthenticated])
     def reorder(self, request, pk=None):
