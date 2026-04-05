@@ -141,7 +141,7 @@ const Index = () => {
             >
               <span className="inline-flex items-center gap-3 text-xs uppercase tracking-[0.28em] text-primary/90 font-medium mb-5">
                 <span className="h-px w-8 bg-primary/35" />
-                Who We Are
+                About Us
               </span>
               <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight mb-5">
                 Crafted for delivery, designed to feel like a premium table experience at home.
