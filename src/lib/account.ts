@@ -1,0 +1,187 @@
+import { apiRequest, type PaginatedResponse } from "@/lib/api";
+
+export interface AuthTokens {
+  access: string;
+  refresh: string;
+}
+
+export interface UserProfile {
+  id: number;
+  email: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  notification_preference: "sms" | "email" | "both";
+  sms_opt_in: boolean;
+  email_opt_in: boolean;
+  is_verified_customer: boolean;
+  verified_reason: string;
+  loyalty_completed_orders: number;
+}
+
+export interface RegisterPayload {
+  email: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  notification_preference: "sms" | "email" | "both";
+  sms_opt_in: boolean;
+  email_opt_in: boolean;
+  password: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface AddressPayload {
+  label: string;
+  recipient_name: string;
+  phone_number: string;
+  line_1: string;
+  line_2?: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  delivery_notes?: string;
+  is_default?: boolean;
+}
+
+export interface Address extends AddressPayload {
+  id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FavoriteItem {
+  id: number;
+  menu_item: number;
+  menu_item_name: string;
+  created_at: string;
+}
+
+export interface ReviewPayload {
+  rating: number;
+  title: string;
+  content: string;
+}
+
+export interface ReviewResponse {
+  id: number;
+  customer_name: string;
+  is_verified_customer: boolean;
+  rating: number;
+  title: string;
+  content: string;
+  customer_photo: string | null;
+  approval_status: string;
+  created_at: string;
+}
+
+export interface OrderListItem {
+  id: number;
+  tracking_token: string;
+  order_type: string;
+  status: string;
+  subtotal: string;
+  delivery_fee: string;
+  total: string;
+  estimated_minutes: number;
+  created_at: string;
+  items: Array<{
+    id: number;
+    menu_item_name: string;
+    quantity: number;
+    line_total: string;
+  }>;
+}
+
+export function login(payload: LoginPayload) {
+  return apiRequest<AuthTokens>("/accounts/login/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function register(payload: RegisterPayload) {
+  return apiRequest<UserProfile>("/accounts/register/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function fetchProfile(token: string) {
+  return apiRequest<UserProfile>("/accounts/profile/", { token });
+}
+
+export function updateProfile(token: string, payload: Partial<UserProfile>) {
+  return apiRequest<UserProfile>("/accounts/profile/", {
+    method: "PATCH",
+    token,
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function fetchAddresses(token: string) {
+  const response = await apiRequest<PaginatedResponse<Address>>("/accounts/addresses/", { token });
+  return response.results;
+}
+
+export function createAddress(token: string, payload: AddressPayload) {
+  return apiRequest<Address>("/accounts/addresses/", {
+    method: "POST",
+    token,
+    body: JSON.stringify(payload),
+  });
+}
+
+export function makeDefaultAddress(token: string, addressId: number) {
+  return apiRequest<{ status: string }>(`/accounts/addresses/${addressId}/make_default/`, {
+    method: "POST",
+    token,
+  });
+}
+
+export async function fetchFavorites(token: string) {
+  const response = await apiRequest<PaginatedResponse<FavoriteItem>>("/accounts/favorites/", { token });
+  return response.results;
+}
+
+export function addFavorite(token: string, menuItemId: number) {
+  return apiRequest<FavoriteItem>("/accounts/favorites/", {
+    method: "POST",
+    token,
+    body: JSON.stringify({ menu_item: menuItemId }),
+  });
+}
+
+export function removeFavorite(token: string, favoriteId: number) {
+  return apiRequest<void>(`/accounts/favorites/${favoriteId}/`, {
+    method: "DELETE",
+    token,
+  });
+}
+
+export async function fetchOrders(token: string) {
+  const response = await apiRequest<PaginatedResponse<OrderListItem>>("/orders/", { token });
+  return response.results;
+}
+
+export function reorderOrder(token: string, orderId: number) {
+  return apiRequest<OrderListItem>(`/orders/${orderId}/reorder/`, {
+    method: "POST",
+    token,
+  });
+}
+
+export function submitReview(token: string, payload: ReviewPayload) {
+  return apiRequest<ReviewResponse>("/marketing/reviews/", {
+    method: "POST",
+    token,
+    body: JSON.stringify(payload),
+  });
+}
+

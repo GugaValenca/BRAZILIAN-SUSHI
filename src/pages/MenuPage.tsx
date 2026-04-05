@@ -1,13 +1,15 @@
 import { useMemo, useState } from "react";
 import { Search, Flame, Leaf, Filter } from "lucide-react";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import SectionHeading from "@/components/SectionHeading";
 import MenuCard from "@/components/MenuCard";
+import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { categories as fallbackCategories, menuItems as fallbackItems } from "@/data/menuData";
+import { addFavorite, fetchFavorites, removeFavorite, type FavoriteItem } from "@/lib/account";
 import { fetchCategories, fetchMenuItems, normalizeMenuItem } from "@/lib/catalog";
 
 const MenuPage = () => {
@@ -16,6 +18,9 @@ const MenuPage = () => {
   const [showSpicy, setShowSpicy] = useState(false);
   const [showVeg, setShowVeg] = useState(false);
   const { addItem } = useCart();
+  const { tokens, isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
+  const token = tokens?.access;
 
   const { data: menuApiItems, isLoading } = useQuery({
     queryKey: ["menu-items"],
@@ -26,6 +31,32 @@ const MenuPage = () => {
     queryKey: ["menu-categories"],
     queryFn: fetchCategories,
   });
+
+  const { data: favorites = [] } = useQuery({
+    queryKey: ["account-favorites", token],
+    queryFn: () => fetchFavorites(token!),
+    enabled: Boolean(token),
+  });
+
+  const addFavoriteMutation = useMutation({
+    mutationFn: (menuItemId: number) => addFavorite(token!, menuItemId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["account-favorites", token] });
+      toast.success("Added to favorites");
+    },
+    onError: () => toast.error("Could not add favorite right now."),
+  });
+
+  const removeFavoriteMutation = useMutation({
+    mutationFn: (favoriteId: number) => removeFavorite(token!, favoriteId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["account-favorites", token] });
+      toast.success("Removed from favorites");
+    },
+    onError: () => toast.error("Could not remove favorite right now."),
+  });
+
+  const favoritesByMenuItem = useMemo(() => new Map(favorites.map((favorite) => [favorite.menu_item, favorite])), [favorites]);
 
   const categories = useMemo(() => {
     const liveCategories = categoriesApi?.map((category) => category.name) ?? [];
@@ -47,6 +78,21 @@ const MenuPage = () => {
     }
     return items;
   }, [activeCategory, search, showSpicy, showVeg, sourceItems]);
+
+  const handleToggleFavorite = (item: (typeof filtered)[number]) => {
+    if (!isAuthenticated || !token) {
+      toast.error("Sign in to save favorites");
+      return;
+    }
+
+    const existingFavorite = favoritesByMenuItem.get(item.apiId) as FavoriteItem | undefined;
+    if (existingFavorite) {
+      removeFavoriteMutation.mutate(existingFavorite.id);
+      return;
+    }
+
+    addFavoriteMutation.mutate(item.apiId);
+  };
 
   return (
     <div className="min-h-screen pt-24 md:pt-28 pb-16">
@@ -126,6 +172,8 @@ const MenuPage = () => {
                 key={item.id}
                 item={item}
                 index={index}
+                isFavorite={favoritesByMenuItem.has(item.apiId)}
+                onToggleFavorite={handleToggleFavorite}
                 onAddToCart={(selectedItem) => {
                   addItem(selectedItem);
                   toast.success(`${selectedItem.name} added to cart`);

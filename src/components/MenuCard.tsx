@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Flame, Leaf } from "lucide-react";
+import { Flame, Heart, Leaf } from "lucide-react";
 
 export interface MenuItem {
   id: string;
@@ -18,9 +18,11 @@ interface MenuCardProps {
   item: MenuItem;
   index?: number;
   onAddToCart?: (item: MenuItem) => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: (item: MenuItem) => void;
 }
 
-const MenuCard = ({ item, index = 0, onAddToCart }: MenuCardProps) => (
+const MenuCard = ({ item, index = 0, onAddToCart, isFavorite = false, onToggleFavorite }: MenuCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 24 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -29,13 +31,23 @@ const MenuCard = ({ item, index = 0, onAddToCart }: MenuCardProps) => (
     className="group bg-card rounded-xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300"
   >
     <div className="relative aspect-square overflow-hidden bg-secondary/40">
-      <img src={item.image} alt={item.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      <img src={item.image || "/favicon.ico"} alt={item.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
       {item.featured && (
         <span className="absolute top-3 left-3 bg-gradient-gold text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
           Featured
         </span>
       )}
       <div className="absolute top-3 right-3 flex gap-1.5">
+        {onToggleFavorite && (
+          <button
+            type="button"
+            onClick={() => onToggleFavorite(item)}
+            className={`p-1.5 rounded-full ${isFavorite ? "bg-primary text-primary-foreground" : "bg-background/90 text-foreground"}`}
+            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          >
+            <Heart className={`w-3.5 h-3.5 ${isFavorite ? "fill-current" : ""}`} />
+          </button>
+        )}
         {item.spicy && (
           <span className="bg-sushi-red/90 p-1.5 rounded-full" title="Spicy">
             <Flame className="w-3.5 h-3.5 text-foreground" />

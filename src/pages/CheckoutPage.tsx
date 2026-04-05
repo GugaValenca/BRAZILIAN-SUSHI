@@ -173,7 +173,7 @@ const CheckoutPage = () => {
                 {items.map((entry) => (
                   <div key={entry.item.id} className="border-b border-border pb-4">
                     <div className="flex gap-4">
-                      <img src={entry.item.image} alt={entry.item.name} className="w-20 h-20 rounded-lg object-cover" />
+                      <img src={entry.item.image || "/favicon.ico"} alt={entry.item.name} className="w-20 h-20 rounded-lg object-cover bg-secondary/50" />
                       <div className="flex-1">
                         <div className="flex items-start justify-between gap-3">
                           <div>
@@ -212,3 +212,4 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
+

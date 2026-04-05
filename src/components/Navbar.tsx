@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, ShoppingBag } from "lucide-react";
+import { Menu, X, Phone, ShoppingBag, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { businessInfo } from "@/lib/site";
 
@@ -17,6 +18,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const { totalItems } = useCart();
+  const { isAuthenticated, user, logout } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass">
@@ -49,6 +51,20 @@ const Navbar = () => {
               </span>
             )}
           </Link>
+          {isAuthenticated ? (
+            <>
+              <Link to="/account" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
+                <User className="w-4 h-4" /> {user?.first_name || "Account"}
+              </Link>
+              <button type="button" onClick={logout} className="text-sm font-semibold text-muted-foreground hover:text-foreground">
+                Log out
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="text-sm font-semibold hover:text-primary">
+              Sign in
+            </Link>
+          )}
           <a
             href={businessInfo.phoneHref}
             className="inline-flex items-center gap-2 bg-gradient-gold text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
@@ -88,6 +104,18 @@ const Navbar = () => {
                 <span className="inline-flex items-center gap-2"><ShoppingBag className="w-4 h-4" /> Checkout</span>
                 {totalItems > 0 && <span className="text-primary text-sm">{totalItems}</span>}
               </Link>
+              {isAuthenticated ? (
+                <>
+                  <Link to="/account" onClick={() => setOpen(false)} className="inline-flex items-center gap-2 text-lg font-medium">
+                    <User className="w-5 h-5" /> {user?.first_name || "Account"}
+                  </Link>
+                  <button type="button" onClick={() => { logout(); setOpen(false); }} className="text-left text-lg font-medium text-muted-foreground">
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" onClick={() => setOpen(false)} className="text-lg font-medium">Sign in</Link>
+              )}
               <a
                 href={businessInfo.phoneHref}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-gold text-primary-foreground px-5 py-3 rounded-lg font-semibold mt-2"

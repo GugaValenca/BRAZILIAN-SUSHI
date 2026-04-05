@@ -13,12 +13,10 @@ const Footer = () => (
     <div className="container py-12 md:py-16">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         <div>
-          <h3 className="text-2xl font-display font-bold text-gradient-gold mb-4">
-            Brazilian Sushi
-          </h3>
+          <h3 className="text-2xl font-display font-bold text-gradient-gold mb-4">Brazilian Sushi</h3>
           <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
-            Premium sushi crafted with Japanese precision and Brazilian soul. 
-            Delivery & takeout only.
+            Premium sushi crafted with Japanese precision and Brazilian soul.
+            Delivery and takeout only.
           </p>
         </div>
 
@@ -27,6 +25,7 @@ const Footer = () => (
           <div className="flex flex-col gap-2">
             <Link to="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">Home</Link>
             <Link to="/menu" className="text-sm text-muted-foreground hover:text-primary transition-colors">Menu</Link>
+            <Link to="/account" className="text-sm text-muted-foreground hover:text-primary transition-colors">Account</Link>
             <Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</Link>
           </div>
         </div>
@@ -51,9 +50,7 @@ const Footer = () => (
       </div>
 
       <div className="divider-gold mt-10 mb-6" />
-      <p className="text-center text-xs text-muted-foreground">
-        Â© {new Date().getFullYear()} Brazilian Sushi. All rights reserved.
-      </p>
+      <p className="text-center text-xs text-muted-foreground">© {new Date().getFullYear()} Brazilian Sushi. All rights reserved.</p>
     </div>
   </footer>
 );
