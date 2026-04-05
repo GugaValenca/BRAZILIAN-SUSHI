@@ -212,14 +212,10 @@ This project is available under the MIT License. Add a `LICENSE` file if you wan
 
 ## 📬 Contact
 
-<p align="center">
-  <a href="https://github.com/GugaValenca">
-    <img alt="GitHub" src="https://img.shields.io/badge/GitHub-GugaValenca-181717?style=for-the-badge&logo=github&logoColor=white" />
-  </a>
-  <a href="https://www.linkedin.com/in/gustavo-valenca">
-    <img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-Gustavo_Valenca-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" />
-  </a>
-  <a href="https://brazilian-sushi.vercel.app">
-    <img alt="Live Demo" src="https://img.shields.io/badge/Live_Demo-Brazilian_Sushi-B22222?style=for-the-badge&logo=vercel&logoColor=white" />
-  </a>
-</p>
+**Gustavo Valença**
+
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/GugaValenca)
+[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gugavalenca/)
+[![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)](https://www.instagram.com/gugatampa)
+[![Twitch](https://img.shields.io/badge/Twitch-%239146FF.svg?style=for-the-badge&logo=Twitch&logoColor=white)](https://www.twitch.tv/gugatampa)
+[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/3QQyR5whBZ)
