@@ -51,9 +51,18 @@ const RegisterPage = () => {
 
   const mutation = useMutation({
     mutationFn: register,
-    onSuccess: () => {
-      toast.success("Account created successfully");
-      navigate("/account");
+    onSuccess: (response) => {
+      if (!response.confirmation_required) {
+        toast.success("Account created successfully. You can sign in now.");
+        navigate("/login");
+        return;
+      }
+
+      const channelSummary = response.confirmation_channels.length
+        ? response.confirmation_channels.join(" and ")
+        : "email";
+      toast.success(`Account created. Please confirm your signup via ${channelSummary} before signing in.`);
+      navigate(`/confirm-account?email=${encodeURIComponent(form.email.trim())}`);
     },
     onError: (error) => {
       toast.error(getFriendlySignupError(error));

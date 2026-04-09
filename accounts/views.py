@@ -1,15 +1,22 @@
 from django.contrib.auth import get_user_model
-from rest_framework import generics, permissions, viewsets
+from django.utils import timezone
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers import (
+    BrazilianSushiTokenObtainPairSerializer,
+    ConfirmAccountSerializer,
     AddressSerializer,
     AdminCustomerSerializer,
     FavoriteMenuItemSerializer,
     RegisterSerializer,
+    ResendConfirmationSerializer,
     UserSerializer,
 )
+from .services import send_account_confirmation
 
 User = get_user_model()
 
@@ -18,6 +25,50 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
+
+
+class LoginView(TokenObtainPairView):
+    serializer_class = BrazilianSushiTokenObtainPairSerializer
+
+
+class ConfirmAccountView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = ConfirmAccountSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        token = serializer.validated_data["token"]
+
+        try:
+            user = User.objects.get(account_confirmation_token=token)
+        except User.DoesNotExist:
+            return Response({"detail": "This confirmation link is invalid or has expired."}, status=status.HTTP_404_NOT_FOUND)
+
+        if user.account_confirmed_at:
+            return Response({"detail": "Your account is already confirmed."})
+
+        user.account_confirmed_at = timezone.now()
+        user.is_active = True
+        user.save(update_fields=["account_confirmed_at", "is_active"])
+        return Response({"detail": "Your account has been confirmed. You can now sign in."})
+
+
+class ResendConfirmationView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = ResendConfirmationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data["email"]
+
+        user = User.objects.filter(email=email).first()
+        if user and not user.account_confirmed_at:
+            send_account_confirmation(user)
+
+        return Response(
+            {"detail": "If an account is pending confirmation for that email, we have sent fresh confirmation instructions."},
+            status=status.HTTP_200_OK,
+        )
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):

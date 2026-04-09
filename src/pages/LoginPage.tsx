@@ -27,8 +27,8 @@ const LoginPage = () => {
       toast.success("Signed in successfully");
       navigate((location.state as { from?: string } | null)?.from ?? "/account");
     },
-    onError: () => {
-      toast.error("We could not sign you in. Check your credentials and try again.");
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "We could not sign you in. Check your credentials and try again.");
     },
   });
 

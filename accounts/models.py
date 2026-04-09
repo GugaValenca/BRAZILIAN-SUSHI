@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import uuid
 
 from .managers import UserManager
 
@@ -22,6 +23,9 @@ class User(AbstractUser):
     notification_preference = models.CharField(max_length=10, choices=NotificationPreference.choices, default=NotificationPreference.BOTH)
     sms_opt_in = models.BooleanField(default=True)
     email_opt_in = models.BooleanField(default=True)
+    account_confirmation_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    account_confirmation_sent_at = models.DateTimeField(null=True, blank=True)
+    account_confirmed_at = models.DateTimeField(null=True, blank=True)
     is_verified_customer = models.BooleanField(default=False)
     verified_reason = models.CharField(max_length=20, choices=VerificationReason.choices, default=VerificationReason.NONE)
     loyalty_completed_orders = models.PositiveIntegerField(default=0)

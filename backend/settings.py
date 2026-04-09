@@ -166,5 +166,20 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST = env_str("EMAIL_HOST")
+EMAIL_PORT = int(env_str("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = env_str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env_str("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = env_str("EMAIL_USE_TLS", "true").lower() == "true"
+EMAIL_USE_SSL = env_str("EMAIL_USE_SSL", "false").lower() == "true"
+EMAIL_BACKEND = (
+    "django.core.mail.backends.smtp.EmailBackend"
+    if EMAIL_HOST
+    else "django.core.mail.backends.console.EmailBackend"
+)
 DEFAULT_FROM_EMAIL = env_str("DEFAULT_FROM_EMAIL", "hello@braziliansushi.com")
+PUBLIC_APP_URL = env_str("PUBLIC_APP_URL", "http://127.0.0.1:8080")
+ACCOUNT_CONFIRMATION_URL = env_str("ACCOUNT_CONFIRMATION_URL", f"{PUBLIC_APP_URL.rstrip('/')}/confirm-account")
+TWILIO_ACCOUNT_SID = env_str("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = env_str("TWILIO_AUTH_TOKEN")
+TWILIO_FROM_NUMBER = env_str("TWILIO_FROM_NUMBER")

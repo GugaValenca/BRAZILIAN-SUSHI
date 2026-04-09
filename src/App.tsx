@@ -24,6 +24,7 @@ const loadCheckoutPage = () => import("./pages/CheckoutPage");
 const loadOrderTrackingPage = () => import("./pages/OrderTrackingPage");
 const loadLoginPage = () => import("./pages/LoginPage");
 const loadRegisterPage = () => import("./pages/RegisterPage");
+const loadConfirmAccountPage = () => import("./pages/ConfirmAccountPage");
 const loadAccountPage = () => import("./pages/AccountPage");
 const loadAdminDashboardPage = () => import("./pages/AdminDashboardPage");
 const loadNotFoundPage = () => import("./pages/NotFound");
@@ -35,6 +36,7 @@ const CheckoutPage = lazy(loadCheckoutPage);
 const OrderTrackingPage = lazy(loadOrderTrackingPage);
 const LoginPage = lazy(loadLoginPage);
 const RegisterPage = lazy(loadRegisterPage);
+const ConfirmAccountPage = lazy(loadConfirmAccountPage);
 const AccountPage = lazy(loadAccountPage);
 const AdminDashboardPage = lazy(loadAdminDashboardPage);
 const NotFound = lazy(loadNotFoundPage);
@@ -123,6 +125,7 @@ const App = () => (
                 <Route path="/track-order" element={<OrderTrackingPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/confirm-account" element={<ConfirmAccountPage />} />
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/staff-dashboard" element={<AdminDashboardPage />} />
                 <Route path="*" element={<NotFound />} />

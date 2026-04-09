@@ -16,16 +16,17 @@ class UserAdmin(DjangoUserAdmin):
         "first_name",
         "last_name",
         "phone_number",
+        "account_confirmed_at",
         "notification_preference",
         "is_verified_customer",
         "verified_reason",
         "is_staff",
     )
-    list_filter = ("notification_preference", "is_verified_customer", "verified_reason", "is_staff", "is_superuser", "is_active")
+    list_filter = ("notification_preference", "is_verified_customer", "verified_reason", "is_staff", "is_superuser", "is_active", "account_confirmed_at")
     ordering = ("email",)
     search_fields = ("email", "username", "first_name", "last_name", "phone_number")
     list_per_page = 25
-    readonly_fields = ("last_login", "date_joined")
+    readonly_fields = ("last_login", "date_joined", "account_confirmation_token", "account_confirmation_sent_at", "account_confirmed_at")
     actions = ("mark_verified", "remove_verification")
     fieldsets = DjangoUserAdmin.fieldsets + (
         (
@@ -36,6 +37,9 @@ class UserAdmin(DjangoUserAdmin):
                     "notification_preference",
                     "sms_opt_in",
                     "email_opt_in",
+                    "account_confirmation_token",
+                    "account_confirmation_sent_at",
+                    "account_confirmed_at",
                     "is_verified_customer",
                     "verified_reason",
                     "loyalty_completed_orders",

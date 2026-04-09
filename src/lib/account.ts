@@ -18,6 +18,15 @@ export interface UserProfile {
   is_verified_customer: boolean;
   verified_reason: string;
   loyalty_completed_orders: number;
+  account_confirmed_at: string | null;
+  can_submit_review: boolean;
+}
+
+export interface RegisterResponse {
+  id: number;
+  email: string;
+  confirmation_channels: string[];
+  confirmation_required: boolean;
 }
 
 export interface RegisterPayload {
@@ -35,6 +44,10 @@ export interface RegisterPayload {
 export interface LoginPayload {
   email: string;
   password: string;
+}
+
+export interface ConfirmationResponse {
+  detail: string;
 }
 
 export interface AddressPayload {
@@ -91,6 +104,7 @@ export interface OrderListItem {
   total: string;
   estimated_minutes: number;
   created_at: string;
+  completed_at: string | null;
   items: Array<{
     id: number;
     menu_item_name: string;
@@ -107,9 +121,23 @@ export function login(payload: LoginPayload) {
 }
 
 export function register(payload: RegisterPayload) {
-  return apiRequest<UserProfile>("/accounts/register/", {
+  return apiRequest<RegisterResponse>("/accounts/register/", {
     method: "POST",
     body: JSON.stringify(payload),
+  });
+}
+
+export function confirmAccount(token: string) {
+  return apiRequest<ConfirmationResponse>("/accounts/confirm-account/", {
+    method: "POST",
+    body: JSON.stringify({ token }),
+  });
+}
+
+export function resendConfirmation(email: string) {
+  return apiRequest<ConfirmationResponse>("/accounts/resend-confirmation/", {
+    method: "POST",
+    body: JSON.stringify({ email }),
   });
 }
 

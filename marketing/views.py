@@ -55,8 +55,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return queryset.filter(approval_status=Review.ApprovalStatus.APPROVED)
 
     def perform_create(self, serializer):
-        if not self.request.user.is_verified_customer:
-            raise PermissionDenied("Only verified customers can submit reviews.")
+        if not self.request.user.orders.filter(completed_at__isnull=False).exists():
+            raise PermissionDenied("Reviews become available after at least one completed order.")
         serializer.save(user=self.request.user, approval_status=Review.ApprovalStatus.PENDING)
 
 

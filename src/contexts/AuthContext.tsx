@@ -7,6 +7,7 @@ import {
   type AuthTokens,
   type LoginPayload,
   type RegisterPayload,
+  type RegisterResponse,
   type UserProfile,
 } from "@/lib/account";
 
@@ -16,7 +17,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (payload: LoginPayload) => Promise<void>;
-  register: (payload: RegisterPayload) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<RegisterResponse>;
   logout: () => void;
   refreshProfile: () => Promise<void>;
 }
@@ -76,12 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const register = async (payload: RegisterPayload) => {
-    await registerRequest(payload);
-    try {
-      await login({ email: payload.email, password: payload.password });
-    } catch {
-      throw new Error("Your account was created, but automatic sign-in could not be completed. Please sign in with your new credentials.");
-    }
+    return registerRequest(payload);
   };
 
   const logout = () => {

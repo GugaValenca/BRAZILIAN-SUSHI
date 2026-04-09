@@ -48,8 +48,6 @@ const AccountPage = () => {
     last_name: user?.last_name ?? "",
     phone_number: user?.phone_number ?? "",
     notification_preference: user?.notification_preference ?? "both",
-    sms_opt_in: user?.sms_opt_in ?? true,
-    email_opt_in: user?.email_opt_in ?? true,
   });
   const [addressForm, setAddressForm] = useState(initialAddress);
   const [reviewForm, setReviewForm] = useState({ rating: 5, title: "", content: "" });
@@ -61,8 +59,6 @@ const AccountPage = () => {
       last_name: user.last_name,
       phone_number: user.phone_number,
       notification_preference: user.notification_preference,
-      sms_opt_in: user.sms_opt_in,
-      email_opt_in: user.email_opt_in,
     });
   }, [user]);
 
@@ -91,8 +87,18 @@ const AccountPage = () => {
     totalSpent: orders.reduce((sum, order) => sum + Number(order.total), 0),
   }), [orders]);
 
+  const canLeaveReview = useMemo(
+    () => user.can_submit_review || orders.some((order) => Boolean(order.completed_at)),
+    [orders, user.can_submit_review],
+  );
+
   const updateProfileMutation = useMutation({
-    mutationFn: () => updateProfile(token!, profileForm),
+    mutationFn: () =>
+      updateProfile(token!, {
+        ...profileForm,
+        sms_opt_in: profileForm.notification_preference !== "email",
+        email_opt_in: profileForm.notification_preference !== "sms",
+      }),
     onSuccess: async () => {
       await refreshProfile();
       toast.success("Profile updated");
@@ -146,7 +152,12 @@ const AccountPage = () => {
       setReviewForm({ rating: 5, title: "", content: "" });
       toast.success("Review submitted for approval");
     },
-    onError: () => toast.error("Only verified customers can submit reviews."),
+    onError: (error) =>
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Reviews are available after at least one completed order.",
+      ),
   });
 
   if (!isAuthenticated || !user || !token) {
@@ -203,10 +214,6 @@ const AccountPage = () => {
                 {([ ["sms", "SMS"], ["email", "Email"], ["both", "SMS + Email"] ] as const).map(([value, label]) => (
                   <button key={value} type="button" onClick={() => setProfileForm((c) => ({ ...c, notification_preference: value }))} className={`rounded-xl border px-4 py-3 text-sm font-medium ${profileForm.notification_preference === value ? "border-primary bg-primary/5" : "border-border"}`}>{label}</button>
                 ))}
-              </div>
-              <div className="grid sm:grid-cols-2 gap-3 text-sm">
-                <label className="inline-flex items-center gap-2"><input type="checkbox" checked={profileForm.sms_opt_in} onChange={(e) => setProfileForm((c) => ({ ...c, sms_opt_in: e.target.checked }))} /> SMS updates</label>
-                <label className="inline-flex items-center gap-2"><input type="checkbox" checked={profileForm.email_opt_in} onChange={(e) => setProfileForm((c) => ({ ...c, email_opt_in: e.target.checked }))} /> Email updates</label>
               </div>
               <button type="button" onClick={() => updateProfileMutation.mutate()} disabled={updateProfileMutation.isPending} className="bg-gradient-gold text-primary-foreground px-6 py-3 rounded-lg font-semibold disabled:opacity-70">{updateProfileMutation.isPending ? "Saving..." : "Save Profile"}</button>
             </section>
@@ -280,7 +287,7 @@ const AccountPage = () => {
 
             <section className="bg-card border border-border rounded-2xl p-6 space-y-4">
               <h3 className="text-2xl font-display font-bold">Leave a Review</h3>
-              {user.is_verified_customer ? (
+              {canLeaveReview ? (
                 <>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <input value={reviewForm.title} onChange={(e) => setReviewForm((c) => ({ ...c, title: e.target.value }))} className="bg-background border border-border rounded-lg px-4 py-3 text-sm" placeholder="Review title" />
@@ -294,7 +301,7 @@ const AccountPage = () => {
                   </button>
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground">Reviews are reserved for verified customers. Complete five successful orders or verify through pickup to unlock review access.</p>
+                <p className="text-sm text-muted-foreground">Reviews are unlocked after at least one completed order has been confirmed on your account.</p>
               )}
             </section>
           </div>

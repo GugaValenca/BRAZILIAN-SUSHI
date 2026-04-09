@@ -1,13 +1,20 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import update_last_login
+from django.utils import timezone
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
+from rest_framework.exceptions import AuthenticationFailed
 
 from .models import Address, FavoriteMenuItem
+from .services import send_account_confirmation
 
 User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
+    confirmation_channels = serializers.ListField(child=serializers.CharField(), read_only=True)
+    confirmation_required = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = User
@@ -22,14 +29,32 @@ class RegisterSerializer(serializers.ModelSerializer):
             "sms_opt_in",
             "email_opt_in",
             "password",
+            "confirmation_channels",
+            "confirmation_required",
         )
 
     def create(self, validated_data):
         password = validated_data.pop("password")
-        return User.objects.create_user(password=password, **validated_data)
+        user = User.objects.create_user(password=password, is_active=False, **validated_data)
+        channels = send_account_confirmation(user)
+        if not channels:
+            user.is_active = True
+            user.account_confirmed_at = timezone.now()
+            user.save(update_fields=["is_active", "account_confirmed_at"])
+        user._confirmation_channels = channels
+        user._confirmation_required = bool(channels)
+        return user
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["confirmation_channels"] = getattr(instance, "_confirmation_channels", [])
+        data["confirmation_required"] = getattr(instance, "_confirmation_required", False)
+        return data
 
 
 class UserSerializer(serializers.ModelSerializer):
+    can_submit_review = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = (
@@ -46,8 +71,13 @@ class UserSerializer(serializers.ModelSerializer):
             "verified_reason",
             "loyalty_completed_orders",
             "is_staff",
+            "account_confirmed_at",
+            "can_submit_review",
         )
-        read_only_fields = ("email", "is_verified_customer", "verified_reason", "loyalty_completed_orders", "is_staff")
+        read_only_fields = ("email", "is_verified_customer", "verified_reason", "loyalty_completed_orders", "is_staff", "account_confirmed_at", "can_submit_review")
+
+    def get_can_submit_review(self, obj):
+        return obj.orders.filter(completed_at__isnull=False).exists()
 
 
 class AdminCustomerSerializer(serializers.ModelSerializer):
@@ -86,3 +116,32 @@ class FavoriteMenuItemSerializer(serializers.ModelSerializer):
         model = FavoriteMenuItem
         fields = ("id", "menu_item", "menu_item_name", "created_at")
         read_only_fields = ("created_at",)
+
+
+class ResendConfirmationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class ConfirmAccountSerializer(serializers.Serializer):
+    token = serializers.UUIDField()
+
+
+class BrazilianSushiTokenObtainPairSerializer(TokenObtainPairSerializer):
+    default_error_messages = {
+        "inactive_account": "Your account is still pending confirmation. Please confirm your signup link before signing in.",
+        "no_active_account": "We couldn't sign you in with those credentials.",
+    }
+
+    @classmethod
+    def get_token(cls, user):
+        return super().get_token(user)
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        user = User.objects.filter(email=email).first()
+        if user and not user.is_active and not user.account_confirmed_at:
+            raise AuthenticationFailed(self.error_messages["inactive_account"], code="inactive_account")
+
+        data = super().validate(attrs)
+        update_last_login(None, self.user)
+        return data
