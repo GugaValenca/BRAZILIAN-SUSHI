@@ -263,7 +263,7 @@ const AccountPage = () => {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <p className="font-semibold inline-flex items-center gap-2"><Truck className="w-4 h-4 text-primary" /> Order #{order.id}</p>
-                          <p className="text-sm text-muted-foreground mt-1">{new Date(order.created_at).toLocaleString()} · {order.status.replaceAll("_", " ")}</p>
+                          <p className="text-sm text-muted-foreground mt-1">{new Date(order.created_at).toLocaleString()} - {order.status.replaceAll("_", " ")}</p>
                         </div>
                         <span className="font-semibold">${Number(order.total).toFixed(2)}</span>
                       </div>
