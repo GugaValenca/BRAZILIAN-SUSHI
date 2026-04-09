@@ -22,12 +22,21 @@ class CouponAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ("user", "rating", "approval_status", "created_at")
+    list_display = ("user", "title", "rating", "approval_status", "created_at")
     list_filter = ("approval_status", "rating")
     search_fields = ("user__email", "title", "content")
     autocomplete_fields = ("user",)
     list_editable = ("approval_status",)
     date_hierarchy = "created_at"
+    actions = ("approve_reviews", "reject_reviews")
+
+    @admin.action(description="Approve selected reviews")
+    def approve_reviews(self, request, queryset):
+        queryset.update(approval_status=Review.ApprovalStatus.APPROVED)
+
+    @admin.action(description="Reject selected reviews")
+    def reject_reviews(self, request, queryset):
+        queryset.update(approval_status=Review.ApprovalStatus.REJECTED)
 
 
 @admin.register(ContactMessage)

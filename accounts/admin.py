@@ -3,6 +3,10 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
 from .models import Address, FavoriteMenuItem, User
 
+admin.site.site_header = "Brazilian Sushi Admin"
+admin.site.site_title = "Brazilian Sushi Admin"
+admin.site.index_title = "Operations Dashboard"
+
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
@@ -22,6 +26,7 @@ class UserAdmin(DjangoUserAdmin):
     search_fields = ("email", "username", "first_name", "last_name", "phone_number")
     list_per_page = 25
     readonly_fields = ("last_login", "date_joined")
+    actions = ("mark_verified", "remove_verification")
     fieldsets = DjangoUserAdmin.fieldsets + (
         (
             "Customer settings",
@@ -38,6 +43,20 @@ class UserAdmin(DjangoUserAdmin):
             },
         ),
     )
+
+    @admin.action(description="Mark selected customers as verified")
+    def mark_verified(self, request, queryset):
+        queryset.update(
+            is_verified_customer=True,
+            verified_reason=User.VerificationReason.IDENTITY,
+        )
+
+    @admin.action(description="Remove verified status from selected customers")
+    def remove_verification(self, request, queryset):
+        queryset.update(
+            is_verified_customer=False,
+            verified_reason=User.VerificationReason.NONE,
+        )
     add_fieldsets = DjangoUserAdmin.add_fieldsets + (
         (
             "Customer settings",

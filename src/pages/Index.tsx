@@ -26,6 +26,17 @@ const storyHighlights = [
   { label: "Brazilian warmth", value: "A subtle house signature that keeps the experience memorable." },
 ];
 
+const fallbackPromotions = [
+  { id: 1, title: "First Order 15% Off", description: "Use code WELCOME15 at checkout on your first order of $25 or more.", audience: "all" },
+  { id: 2, title: "Verified Combo Upgrade", description: "Verified guests receive a complimentary miso soup with any combo order this week.", audience: "verified" },
+];
+
+const fallbackReviews = [
+  { id: 1, customer_name: "Maria S.", rating: 5, content: "Beautiful presentation, balanced flavors, and rolls that arrive tasting as fresh as they look.", is_verified_customer: true, title: "Amazing", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
+  { id: 2, customer_name: "James L.", rating: 5, content: "The sashimi is consistently pristine and the hand rolls have that just-made texture you expect from a premium spot.", is_verified_customer: true, title: "Premium", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
+  { id: 3, customer_name: "Ana P.", rating: 5, content: "Refined, flavorful, and easy to order. It feels elevated without losing the warmth of a neighborhood favorite.", is_verified_customer: true, title: "Favorite", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
+];
+
 const Index = () => {
   usePageMeta({
     title: "Brazilian Sushi | Premium Sushi Delivery & Takeout",
@@ -51,12 +62,8 @@ const Index = () => {
   });
 
   const featured = featuredItems?.length ? featuredItems.slice(0, 4).map(normalizeMenuItem) : fallbackFeatured;
-  const promotionCards = promotions?.slice(0, 2) ?? [];
-  const reviewCards = reviews?.slice(0, 3) ?? [
-    { id: 1, customer_name: "Maria S.", rating: 5, content: "Beautiful presentation, balanced flavors, and rolls that arrive tasting as fresh as they look.", is_verified_customer: true, title: "Amazing", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
-    { id: 2, customer_name: "James L.", rating: 5, content: "The sashimi is consistently pristine and the hand rolls have that just-made texture you expect from a premium spot.", is_verified_customer: true, title: "Premium", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
-    { id: 3, customer_name: "Ana P.", rating: 5, content: "Refined, flavorful, and easy to order. It feels elevated without losing the warmth of a neighborhood favorite.", is_verified_customer: true, title: "Favorite", customer_photo: null, approval_status: "approved", created_at: new Date().toISOString() },
-  ];
+  const promotionCards = promotions?.length ? promotions.slice(0, 2) : fallbackPromotions;
+  const reviewCards = reviews?.length ? reviews.slice(0, 3) : fallbackReviews;
 
   return (
     <div className="min-h-screen">
@@ -192,10 +199,7 @@ const Index = () => {
         <div className="container">
           <SectionHeading label="Special Offers" title="Today's Deals" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {(promotionCards.length ? promotionCards : [
-              { id: 1, title: "First Order 15% Off", description: "Use code WELCOME15 at checkout on your first order.", audience: "all" },
-              { id: 2, title: "Complimentary Miso Soup", description: "Verified customers receive a complimentary miso soup with any combo.", audience: "verified" },
-            ]).map((promotion, index) => (
+            {promotionCards.map((promotion, index) => (
               <motion.div
                 key={promotion.id}
                 initial={{ opacity: 0, x: index === 0 ? -20 : 20 }}

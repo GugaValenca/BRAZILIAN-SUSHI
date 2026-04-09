@@ -49,13 +49,15 @@ async function parseResponse<T>(response: Response): Promise<T> {
       throw new Error(`Request failed with status ${response.status}`);
     }
 
+    let parsedMessage = "";
     try {
       const parsedError = JSON.parse(errorBody) as unknown;
-      const message = flattenErrorMessage(parsedError);
-      throw new Error(message || `Request failed with status ${response.status}`);
+      parsedMessage = flattenErrorMessage(parsedError);
     } catch {
-      throw new Error(errorBody || `Request failed with status ${response.status}`);
+      parsedMessage = "";
     }
+
+    throw new Error(parsedMessage || errorBody || `Request failed with status ${response.status}`);
   }
 
   if (response.status === 204) {

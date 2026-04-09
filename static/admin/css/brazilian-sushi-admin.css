@@ -135,7 +135,8 @@ div.help,
 #changelist-filter h2,
 .selector h2,
 .login .form-row,
-.submit-row {
+.submit-row,
+.breadcrumbs {
   background: transparent;
 }
 
@@ -187,7 +188,8 @@ legend {
 }
 
 .bs-admin-hero p,
-.bs-admin-login-copy p {
+.bs-admin-login-copy p,
+.bs-admin-section-head p {
   max-width: 50rem;
   margin: 0.75rem 0 0;
   color: var(--bs-admin-muted);
@@ -226,6 +228,70 @@ legend {
 .dashboard .app-orders,
 .dashboard .app-marketing {
   margin-bottom: 1.25rem;
+}
+
+.breadcrumbs {
+  margin: 1rem auto 0;
+  width: min(1280px, calc(100% - 48px));
+  color: var(--bs-admin-muted);
+}
+
+.breadcrumbs a {
+  color: var(--bs-admin-text);
+}
+
+#content-main .change-list-form,
+.change-form #content-main,
+.dashboard #content-main {
+  display: grid;
+  gap: 1.25rem;
+}
+
+#changelist .actions,
+#changelist-filter,
+#toolbar,
+.paginator,
+.submit-row {
+  border-radius: 18px;
+}
+
+#toolbar,
+#changelist .actions,
+.paginator {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--bs-admin-border);
+  padding: 1rem 1.1rem;
+}
+
+#changelist-filter ul li.selected a,
+#changelist-filter ul li a:hover {
+  color: var(--bs-admin-accent);
+}
+
+#result_list {
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+#result_list thead th {
+  background: rgba(255,255,255,0.04);
+  color: var(--bs-admin-text);
+}
+
+.change-form .aligned .form-row,
+.change-form .form-row,
+.inline-related {
+  border-color: rgba(255,255,255,0.05);
+}
+
+fieldset.module.aligned,
+.inline-group {
+  overflow: hidden;
+}
+
+.messagelist li {
+  border-radius: 16px;
+  border: 1px solid var(--bs-admin-border);
 }
 
 .dashboard .module table th,

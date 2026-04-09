@@ -8,6 +8,28 @@ import SectionHeading from "@/components/SectionHeading";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
+function getFriendlySignupError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return "We couldn't create your account right now. Please review your details and try again.";
+  }
+
+  const message = error.message.toLowerCase();
+
+  if (message.includes("email") && message.includes("already exists")) {
+    return "An account with this email already exists. Please sign in or use a different email address.";
+  }
+
+  if (message.includes("username") && message.includes("already exists")) {
+    return "That username is already in use. Please choose another one and try again.";
+  }
+
+  if (message.includes("automatic sign-in")) {
+    return error.message;
+  }
+
+  return "We couldn't create your account right now. Please review your details and try again.";
+}
+
 const RegisterPage = () => {
   usePageMeta({
     title: "Create Account | Brazilian Sushi",
@@ -34,7 +56,7 @@ const RegisterPage = () => {
       navigate("/account");
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "We could not create your account. Please review your details and try again.");
+      toast.error(getFriendlySignupError(error));
     },
   });
 
