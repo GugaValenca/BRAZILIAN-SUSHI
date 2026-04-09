@@ -33,8 +33,8 @@ const RegisterPage = () => {
       toast.success("Account created successfully");
       navigate("/account");
     },
-    onError: () => {
-      toast.error("We could not create your account. Please review your details and try again.");
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "We could not create your account. Please review your details and try again.");
     },
   });
 
@@ -54,7 +54,14 @@ const RegisterPage = () => {
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            mutation.mutate(form);
+            mutation.mutate({
+              ...form,
+              email: form.email.trim(),
+              username: form.username.trim(),
+              phone_number: form.phone_number.trim(),
+              sms_opt_in: form.notification_preference !== "email",
+              email_opt_in: form.notification_preference !== "sms",
+            });
           }}
           className="bg-card border border-border rounded-2xl p-8 space-y-6"
         >

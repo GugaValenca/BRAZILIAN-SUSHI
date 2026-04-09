@@ -77,7 +77,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const register = async (payload: RegisterPayload) => {
     await registerRequest(payload);
-    await login({ email: payload.email, password: payload.password });
+    try {
+      await login({ email: payload.email, password: payload.password });
+    } catch {
+      throw new Error("Your account was created, but automatic sign-in could not be completed. Please sign in with your new credentials.");
+    }
   };
 
   const logout = () => {
