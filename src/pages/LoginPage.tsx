@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { LogIn } from "lucide-react";
+import { LogIn, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import SectionHeading from "@/components/SectionHeading";
@@ -20,6 +20,10 @@ const LoginPage = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const pendingConfirmationEmail = useMemo(() => {
+    const state = location.state as { pendingConfirmationEmail?: string } | null;
+    return state?.pendingConfirmationEmail ?? "";
+  }, [location.state]);
 
   const mutation = useMutation({
     mutationFn: login,
@@ -28,7 +32,8 @@ const LoginPage = () => {
       navigate((location.state as { from?: string } | null)?.from ?? "/account");
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "We could not sign you in. Check your credentials and try again.");
+      const message = error instanceof Error ? error.message : "We could not sign you in. Check your credentials and try again.";
+      toast.error(message);
     },
   });
 
@@ -40,6 +45,24 @@ const LoginPage = () => {
           title="Sign In"
           subtitle="Return to your account to follow recent orders, revisit favorites, and keep your checkout details ready for the next order."
         />
+
+        {pendingConfirmationEmail && (
+          <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-5">
+            <p className="inline-flex items-center gap-2 text-sm font-semibold text-foreground">
+              <MailCheck className="w-4 h-4 text-primary" />
+              Your account is waiting for confirmation.
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              We sent activation instructions to <span className="font-medium text-foreground">{pendingConfirmationEmail}</span>.
+            </p>
+            <Link
+              to={`/confirm-account?email=${encodeURIComponent(pendingConfirmationEmail)}`}
+              className="inline-flex items-center gap-2 text-primary font-semibold mt-4 hover:underline underline-offset-4"
+            >
+              Open confirmation page
+            </Link>
+          </div>
+        )}
 
         <form
           onSubmit={(event) => {

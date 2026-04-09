@@ -62,7 +62,12 @@ const RegisterPage = () => {
         ? response.confirmation_channels.join(" and ")
         : "email";
       toast.success(`Account created. Please confirm your signup via ${channelSummary} before signing in.`);
-      navigate(`/confirm-account?email=${encodeURIComponent(form.email.trim())}`);
+      navigate(`/confirm-account?email=${encodeURIComponent(form.email.trim())}`, {
+        state: {
+          justCreated: true,
+          confirmationChannels: response.confirmation_channels,
+        },
+      });
     },
     onError: (error) => {
       toast.error(getFriendlySignupError(error));
