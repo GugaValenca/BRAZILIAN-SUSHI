@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from django.utils import timezone
 
 from accounts.models import User
@@ -23,12 +24,13 @@ class OrderStatusEventInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "guest_name",
+        "guest_summary",
         "customer_email",
         "customer_priority",
+        "status_badge",
+        "service_state",
         "kitchen_attention",
         "order_type",
-        "status",
         "total",
         "notification_preference",
         "created_at",
@@ -95,11 +97,48 @@ class OrderAdmin(admin.ModelAdmin):
     def customer_email(self, obj):
         return obj.customer.email if obj.customer else obj.guest_email or "-"
 
+    @admin.display(description="Guest")
+    def guest_summary(self, obj):
+        primary = obj.guest_name or (obj.customer.get_full_name() if obj.customer else "") or "Guest order"
+        secondary = obj.guest_phone or "No phone"
+        return format_html(
+            '<div class="bs-admin-cell-stack"><strong>{}</strong><span>{}</span></div>',
+            primary,
+            secondary,
+        )
+
     @admin.display(description="Priority")
     def customer_priority(self, obj):
         if obj.customer and obj.customer.is_verified_customer:
-            return "Verified priority"
-        return "Standard"
+            return format_html('<span class="bs-admin-badge bs-admin-badge--priority">Verified priority</span>')
+        return format_html('<span class="bs-admin-badge">Standard</span>')
+
+    @admin.display(description="Status", ordering="status")
+    def status_badge(self, obj):
+        tone_map = {
+            Order.Status.RECEIVED: "neutral",
+            Order.Status.CONFIRMED: "info",
+            Order.Status.PREPARING: "accent",
+            Order.Status.READY: "success",
+            Order.Status.OUT_FOR_DELIVERY: "info",
+            Order.Status.DELIVERED: "success",
+            Order.Status.CANCELLED: "danger",
+        }
+        tone = tone_map.get(obj.status, "neutral")
+        label = obj.get_status_display()
+        return format_html('<span class="bs-admin-badge bs-admin-badge--{}">{}</span>', tone, label)
+
+    @admin.display(description="Service state")
+    def service_state(self, obj):
+        if obj.status in {Order.Status.DELIVERED, Order.Status.CANCELLED}:
+            return format_html('<span class="bs-admin-badge bs-admin-badge--neutral">Closed</span>')
+
+        elapsed_minutes = int((timezone.now() - obj.created_at).total_seconds() // 60)
+        if elapsed_minutes > obj.estimated_minutes + 10:
+            return format_html('<span class="bs-admin-badge bs-admin-badge--danger">Delayed</span>')
+        if elapsed_minutes > obj.estimated_minutes:
+            return format_html('<span class="bs-admin-badge bs-admin-badge--accent">At risk</span>')
+        return format_html('<span class="bs-admin-badge bs-admin-badge--success">On track</span>')
 
     @admin.display(description="Items in order")
     def items_preview(self, obj):
@@ -111,10 +150,10 @@ class OrderAdmin(admin.ModelAdmin):
     @admin.display(description="Kitchen attention")
     def kitchen_attention(self, obj):
         if obj.allergy_notes:
-            return "Allergy alert"
+            return format_html('<span class="bs-admin-badge bs-admin-badge--danger">Allergy alert</span>')
         if obj.notes:
-            return "Kitchen notes"
-        return "Standard"
+            return format_html('<span class="bs-admin-badge bs-admin-badge--accent">Kitchen notes</span>')
+        return format_html('<span class="bs-admin-badge">Standard</span>')
 
     @admin.display(description="Kitchen notes")
     def kitchen_notes_preview(self, obj):

@@ -5,19 +5,44 @@
 <div class="bs-admin-hero">
   <div>
     <span class="bs-admin-kicker">Control Center</span>
-    <h1>Run the restaurant with clarity.</h1>
-    <p>Manage orders, menu updates, customer records, reviews, and campaigns from a dashboard that matches the quality of the storefront.</p>
+    <h1>Operations Dashboard</h1>
+    <p>
+      Keep service standards high with a clear view of customers, menu content, reviews, support messages, and every order moving through the kitchen and delivery flow.
+    </p>
   </div>
   <div class="bs-admin-hero-panels">
     <div class="bs-admin-panel-card">
       <strong>{{ app_list|length }}</strong>
-      <span>Admin modules ready</span>
+      <span>Operational modules</span>
     </div>
     <div class="bs-admin-panel-card">
       <strong>Live</strong>
-      <span>Production operations enabled</span>
+      <span>Production-ready controls</span>
+    </div>
+    <div class="bs-admin-panel-card">
+      <strong>Priority</strong>
+      <span>Orders, guests, reviews, and campaigns aligned in one admin.</span>
     </div>
   </div>
 </div>
+
+<div class="bs-admin-dashboard-intro">
+  <article class="bs-admin-dashboard-card">
+    <span class="bs-admin-kicker">Orders Workflow</span>
+    <h2>From intake to delivery</h2>
+    <p>Track received, confirmed, preparing, ready, out-for-delivery, delivered, and cancelled orders with less friction.</p>
+  </article>
+  <article class="bs-admin-dashboard-card">
+    <span class="bs-admin-kicker">Kitchen Focus</span>
+    <h2>Surface the right alerts</h2>
+    <p>Allergy notes, dietary restrictions, and special requests stay visible so the team can act with confidence.</p>
+  </article>
+  <article class="bs-admin-dashboard-card">
+    <span class="bs-admin-kicker">Customer Quality</span>
+    <h2>Protect the brand experience</h2>
+    <p>Moderate reviews, manage verification, support returning customers, and keep campaigns operationally clean.</p>
+  </article>
+</div>
+
 {{ block.super }}
 {% endblock %}
