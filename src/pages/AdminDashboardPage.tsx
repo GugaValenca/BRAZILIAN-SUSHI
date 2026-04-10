@@ -179,6 +179,32 @@ const AdminDashboardPage = () => {
                       </div>
                       <span className="text-sm text-primary font-semibold">{order.notification_preference.toUpperCase()}</span>
                     </div>
+                    {(order.has_kitchen_notes || order.has_allergy_alert) ? (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {order.has_kitchen_notes ? (
+                          <span className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                            Kitchen notes
+                          </span>
+                        ) : null}
+                        {order.has_allergy_alert ? (
+                          <span className="inline-flex items-center rounded-full border border-destructive/35 bg-destructive/10 px-3 py-1 text-xs font-semibold text-destructive">
+                            Allergy / dietary alert
+                          </span>
+                        ) : null}
+                      </div>
+                    ) : null}
+                    {order.notes ? (
+                      <div className="mt-3 rounded-xl border border-border bg-background/60 p-3">
+                        <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Order notes</p>
+                        <p className="mt-2 text-sm text-foreground">{order.notes}</p>
+                      </div>
+                    ) : null}
+                    {order.allergy_notes ? (
+                      <div className="mt-3 rounded-xl border border-destructive/35 bg-destructive/10 p-3">
+                        <p className="text-xs uppercase tracking-[0.24em] font-semibold text-destructive">Allergy or dietary restriction</p>
+                        <p className="mt-2 text-sm text-foreground">{order.allergy_notes}</p>
+                      </div>
+                    ) : null}
                     <div className="mt-3 text-sm text-muted-foreground">{order.items.map((item) => `${item.quantity}x ${item.menu_item_name}`).join(", ")}</div>
                     <div className="flex flex-wrap gap-3 mt-4">
                       {["confirmed", "preparing", "ready", "out_for_delivery", "delivered"].map((status) => (

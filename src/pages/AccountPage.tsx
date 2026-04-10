@@ -243,7 +243,7 @@ const AccountPage = () => {
                   <button
                     type="button"
                     onClick={() => setIsEditingProfile(true)}
-                    className="border border-primary/30 px-5 py-3 rounded-lg font-semibold"
+                    className="inline-flex items-center justify-center self-start border border-primary/30 px-4 py-2 text-sm rounded-lg font-semibold"
                   >
                     Edit Information
                   </button>
@@ -256,13 +256,13 @@ const AccountPage = () => {
                     <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Name</p>
                     <p className="mt-2 text-base font-semibold">{`${user.first_name} ${user.last_name}`.trim() || "Not provided"}</p>
                   </div>
-                  <div className="rounded-2xl border border-border bg-background/60 p-4">
+                  <div className="rounded-2xl border border-border bg-background/60 p-4 sm:col-span-2">
                     <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Email</p>
-                    <p className="mt-2 text-base font-semibold break-all">{user.email}</p>
+                    <p className="mt-2 text-base font-semibold whitespace-normal break-all">{user.email}</p>
                   </div>
                   <div className="rounded-2xl border border-border bg-background/60 p-4">
                     <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Phone</p>
-                    <p className="mt-2 text-base font-semibold">{user.phone_number || "Not provided"}</p>
+                    <p className="mt-2 text-base font-semibold whitespace-normal break-words">{user.phone_number || "Not provided"}</p>
                   </div>
                   <div className="rounded-2xl border border-border bg-background/60 p-4">
                     <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Notifications</p>

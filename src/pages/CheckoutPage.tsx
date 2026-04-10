@@ -5,6 +5,7 @@ import { ArrowRight, Clock, MapPin, Minus, Plus, ShoppingBag, Trash2 } from "luc
 import { toast } from "sonner";
 
 import SectionHeading from "@/components/SectionHeading";
+import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { createOrder, fetchDeliveryZones } from "@/lib/catalog";
@@ -18,6 +19,7 @@ const CheckoutPage = () => {
 
   const navigate = useNavigate();
   const { items, subtotal, updateQuantity, removeItem, clearCart } = useCart();
+  const { user, tokens, isAuthenticated } = useAuth();
   const [orderType, setOrderType] = useState<"delivery" | "pickup">("delivery");
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
@@ -40,9 +42,10 @@ const CheckoutPage = () => {
 
   const deliveryFee = orderType === "delivery" ? Number(selectedZone?.fee ?? 0) : 0;
   const total = subtotal + deliveryFee;
+  const isSignedIn = Boolean(isAuthenticated && user && tokens?.access);
 
   const orderMutation = useMutation({
-    mutationFn: createOrder,
+    mutationFn: (payload: Parameters<typeof createOrder>[0]) => createOrder(payload, tokens?.access),
     onSuccess: (order) => {
       clearCart();
       toast.success("Order placed successfully");
@@ -53,7 +56,7 @@ const CheckoutPage = () => {
     },
   });
 
-  const canSubmit = items.length > 0 && guestName && guestEmail && guestPhone && (orderType === "pickup" || deliveryZoneId);
+  const canSubmit = items.length > 0 && (isSignedIn || (guestName && guestEmail && guestPhone)) && (orderType === "pickup" || deliveryZoneId);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -62,12 +65,12 @@ const CheckoutPage = () => {
     orderMutation.mutate({
       order_type: orderType,
       delivery_zone: orderType === "delivery" ? deliveryZoneId : undefined,
-      guest_name: guestName,
-      guest_email: guestEmail,
-      guest_phone: guestPhone,
+      guest_name: isSignedIn ? undefined : guestName,
+      guest_email: isSignedIn ? undefined : guestEmail,
+      guest_phone: isSignedIn ? undefined : guestPhone,
       notes,
       allergy_notes: allergyNotes,
-      notification_preference: notificationPreference,
+      notification_preference: isSignedIn ? undefined : notificationPreference,
       items: items.map((entry) => ({
         menu_item_id: entry.item.apiId,
         quantity: entry.quantity,
@@ -81,7 +84,7 @@ const CheckoutPage = () => {
         <SectionHeading
           label="Checkout"
           title="Complete Your Order"
-          subtitle="Review your selections, choose delivery or pickup, and confirm the details for a smooth handoff to our kitchen."
+          subtitle="Review your selections, choose delivery or pickup, and confirm the order notes our kitchen should see before service begins."
         />
 
         {items.length === 0 ? (
@@ -110,36 +113,105 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-                <h3 className="text-xl font-display font-bold">Guest Details</h3>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <input value={guestName} onChange={(e) => setGuestName(e.target.value)} required placeholder="Full name" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm" />
-                  <input value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} required placeholder="Phone number" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm" />
+              <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <h3 className="text-xl font-display font-bold">{isSignedIn ? "Account Details" : "Guest Details"}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {isSignedIn
+                        ? "These details come directly from your account profile. Edit them in your account if anything needs to change."
+                        : "Enter the contact details we should use for this order and its updates."}
+                    </p>
+                  </div>
+                  {isSignedIn ? (
+                    <Link
+                      to="/account"
+                      className="inline-flex items-center justify-center rounded-lg border border-primary/30 px-4 py-2 text-sm font-semibold"
+                    >
+                      Edit Information
+                    </Link>
+                  ) : null}
                 </div>
-                <input value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} required type="email" placeholder="Email address" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm" />
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Extra napkins, sauce preferences, or special requests" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm resize-none" />
-                  <textarea value={allergyNotes} onChange={(e) => setAllergyNotes(e.target.value)} rows={3} placeholder="Allergies or dietary considerations we should know about" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm resize-none" />
-                </div>
+
+                {isSignedIn ? (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-border bg-background/60 p-4">
+                      <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Full name</p>
+                      <p className="mt-2 text-base font-semibold whitespace-normal break-words">{`${user.first_name} ${user.last_name}`.trim() || user.username}</p>
+                    </div>
+                    <div className="rounded-2xl border border-border bg-background/60 p-4">
+                      <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Phone</p>
+                      <p className="mt-2 text-base font-semibold whitespace-normal break-words">{user.phone_number || "Not provided"}</p>
+                    </div>
+                    <div className="rounded-2xl border border-border bg-background/60 p-4 sm:col-span-2">
+                      <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Email</p>
+                      <p className="mt-2 text-base font-semibold whitespace-normal break-all">{user.email}</p>
+                    </div>
+                    <div className="rounded-2xl border border-border bg-background/60 p-4 sm:col-span-2">
+                      <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Notification preference</p>
+                      <p className="mt-2 text-base font-semibold">
+                        {user.notification_preference === "both"
+                          ? "SMS + Email updates"
+                          : user.notification_preference === "sms"
+                            ? "SMS updates"
+                            : "Email updates"}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label htmlFor="guest-name" className="text-sm font-semibold">Full Name</label>
+                        <input id="guest-name" value={guestName} onChange={(e) => setGuestName(e.target.value)} required placeholder="Full name" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm" />
+                      </div>
+                      <div className="space-y-2">
+                        <label htmlFor="guest-phone" className="text-sm font-semibold">Phone Number</label>
+                        <input id="guest-phone" value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} required placeholder="Phone number" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="guest-email" className="text-sm font-semibold">Email Address</label>
+                      <input id="guest-email" value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} required type="email" placeholder="Email address" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm" />
+                    </div>
+                    <div className="space-y-3">
+                      <p className="text-sm font-semibold">Notification Preference</p>
+                      <div className="grid sm:grid-cols-3 gap-3">
+                        {([
+                          ["sms", "SMS"],
+                          ["email", "Email"],
+                          ["both", "SMS + Email"],
+                        ] as const).map(([value, label]) => (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => setNotificationPreference(value)}
+                            className={`rounded-xl border px-4 py-3 text-sm font-medium ${notificationPreference === value ? "border-primary bg-primary/5" : "border-border"}`}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-                <h3 className="text-xl font-display font-bold">Notifications</h3>
-                <div className="grid sm:grid-cols-3 gap-3">
-                  {([
-                    ["sms", "SMS"],
-                    ["email", "Email"],
-                    ["both", "SMS + Email"],
-                  ] as const).map(([value, label]) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setNotificationPreference(value)}
-                      className={`rounded-xl border px-4 py-3 text-sm font-medium ${notificationPreference === value ? "border-primary bg-primary/5" : "border-border"}`}
-                    >
-                      {label}
-                    </button>
-                  ))}
+                <h3 className="text-xl font-display font-bold">Order Details</h3>
+                <p className="text-sm text-muted-foreground">
+                  Add only what the kitchen and delivery team should know for this specific order.
+                </p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="order-notes" className="text-sm font-semibold">Order Notes</label>
+                    <textarea id="order-notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} placeholder="Extra napkins, sauce preferences, pickup timing, or any special request for this order" className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm resize-none" />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="order-allergy-notes" className="text-sm font-semibold text-destructive">Allergies or Dietary Restrictions</label>
+                    <textarea id="order-allergy-notes" value={allergyNotes} onChange={(e) => setAllergyNotes(e.target.value)} rows={4} placeholder="Tell us about any allergy, ingredient restriction, or dietary concern that must be treated with extra care" className="w-full bg-background border border-destructive/40 rounded-lg px-4 py-3 text-sm resize-none" />
+                    <p className="text-xs text-destructive/90">Orders with allergy or dietary restriction notes are highlighted for the kitchen.</p>
+                  </div>
                 </div>
               </div>
 

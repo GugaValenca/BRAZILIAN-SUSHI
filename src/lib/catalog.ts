@@ -125,6 +125,8 @@ export interface OrderResponse {
   notes: string;
   allergy_notes: string;
   notification_preference: string;
+  has_kitchen_notes: boolean;
+  has_allergy_alert: boolean;
   subtotal: string;
   delivery_fee: string;
   discount_amount: string;
@@ -152,13 +154,13 @@ export interface ContactMessageResponse extends ContactMessagePayload {
 export interface CreateOrderPayload {
   delivery_zone?: number;
   order_type: "delivery" | "pickup";
-  guest_name: string;
-  guest_email: string;
-  guest_phone: string;
+  guest_name?: string;
+  guest_email?: string;
+  guest_phone?: string;
   scheduled_for?: string;
   notes?: string;
   allergy_notes?: string;
-  notification_preference: "sms" | "email" | "both";
+  notification_preference?: "sms" | "email" | "both";
   items: Array<{
     menu_item_id: number;
     quantity: number;
@@ -244,8 +246,8 @@ export async function fetchDeliveryZones() {
   return response.results;
 }
 
-export async function createOrder(payload: CreateOrderPayload) {
-  return apiRequest<OrderResponse>("/orders/", { method: "POST", body: JSON.stringify(payload) });
+export async function createOrder(payload: CreateOrderPayload, token?: string) {
+  return apiRequest<OrderResponse>("/orders/", { method: "POST", token, body: JSON.stringify(payload) });
 }
 
 export async function trackOrder(orderId: string, token: string) {

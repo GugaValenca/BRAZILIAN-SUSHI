@@ -137,7 +137,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             order.preparation_started_at = now
         elif next_status == Order.Status.OUT_FOR_DELIVERY:
             order.dispatched_at = now
-        elif next_status in {Order.Status.DELIVERED, Order.Status.READY}:
+        elif next_status == Order.Status.DELIVERED:
             order.completed_at = now
         order.save()
         OrderStatusEvent.objects.create(order=order, status=next_status, note=note)

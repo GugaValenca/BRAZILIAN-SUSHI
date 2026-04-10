@@ -106,3 +106,52 @@ class GuestOrderSecurityTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["id"], self.order.id)
         self.assertEqual(response.data["tracking_token"], str(self.order.tracking_token))
+
+
+class AuthenticatedCheckoutTests(APITestCase):
+    def setUp(self):
+        self.customer = User.objects.create_user(
+            email="member@braziliansushi.com",
+            username="member",
+            password="StrongPass123!",
+            first_name="Gustavo",
+            last_name="Valenca",
+            phone_number="8135550101",
+            notification_preference=User.NotificationPreference.EMAIL,
+        )
+        category = Category.objects.create(name="Combos", slug="combos")
+        self.menu_item = MenuItem.objects.create(
+            category=category,
+            name="Date Night Combo",
+            slug="date-night-combo-checkout",
+            short_description="Shareable combo",
+            price=Decimal("36.00"),
+        )
+        self.client.force_authenticate(self.customer)
+
+    def test_authenticated_checkout_uses_profile_contact_details(self):
+        response = self.client.post(
+            reverse("order-list"),
+            {
+                "order_type": Order.OrderType.PICKUP,
+                "notes": "Please include extra napkins.",
+                "allergy_notes": "Shellfish allergy.",
+                "items": [
+                    {
+                        "menu_item_id": self.menu_item.id,
+                        "quantity": 1,
+                    }
+                ],
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        order = Order.objects.get(pk=response.data["id"])
+        self.assertEqual(order.customer, self.customer)
+        self.assertEqual(order.guest_name, "Gustavo Valenca")
+        self.assertEqual(order.guest_email, self.customer.email)
+        self.assertEqual(order.guest_phone, self.customer.phone_number)
+        self.assertEqual(order.notification_preference, User.NotificationPreference.EMAIL)
+        self.assertTrue(response.data["has_kitchen_notes"])
+        self.assertTrue(response.data["has_allergy_alert"])

@@ -41,6 +41,29 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("customer",)
 
+    def validate(self, attrs):
+        request = self.context["request"]
+        user = request.user if request.user.is_authenticated else None
+
+        if user:
+            attrs["guest_name"] = user.get_full_name().strip() or user.username
+            attrs["guest_email"] = user.email
+            attrs["guest_phone"] = user.phone_number
+            attrs["notification_preference"] = user.notification_preference
+            return attrs
+
+        missing_fields = [
+            field_name
+            for field_name in ("guest_name", "guest_email", "guest_phone", "notification_preference")
+            if not attrs.get(field_name)
+        ]
+        if missing_fields:
+            raise serializers.ValidationError(
+                {field_name: "This field is required for guest checkout." for field_name in missing_fields}
+            )
+
+        return attrs
+
     def create(self, validated_data):
         items_data = validated_data.pop("items", [])
         request = self.context["request"]
@@ -104,7 +127,15 @@ class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)
     status_events = OrderStatusEventSerializer(many=True, read_only=True)
     average_delivery_time = serializers.ReadOnlyField()
+    has_kitchen_notes = serializers.SerializerMethodField()
+    has_allergy_alert = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
         fields = "__all__"
+
+    def get_has_kitchen_notes(self, obj):
+        return bool((obj.notes or "").strip() or (obj.allergy_notes or "").strip())
+
+    def get_has_allergy_alert(self, obj):
+        return bool((obj.allergy_notes or "").strip())

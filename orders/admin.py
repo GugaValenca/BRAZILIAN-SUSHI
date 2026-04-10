@@ -26,6 +26,7 @@ class OrderAdmin(admin.ModelAdmin):
         "guest_name",
         "customer_email",
         "customer_priority",
+        "kitchen_attention",
         "order_type",
         "status",
         "total",
@@ -40,6 +41,8 @@ class OrderAdmin(admin.ModelAdmin):
         "discount_amount",
         "total",
         "items_preview",
+        "kitchen_notes_preview",
+        "allergy_alert_preview",
         "average_delivery_time_display",
         "created_at",
         "updated_at",
@@ -76,7 +79,7 @@ class OrderAdmin(admin.ModelAdmin):
         (
             "Kitchen notes",
             {
-                "fields": ("notes", "allergy_notes"),
+                "fields": ("notes", "allergy_notes", "kitchen_notes_preview", "allergy_alert_preview"),
             },
         ),
         (
@@ -104,6 +107,22 @@ class OrderAdmin(admin.ModelAdmin):
         if not items:
             return "No items added yet."
         return ", ".join(f"{item.quantity}x {item.menu_item.name}" for item in items)
+
+    @admin.display(description="Kitchen attention")
+    def kitchen_attention(self, obj):
+        if obj.allergy_notes:
+            return "Allergy alert"
+        if obj.notes:
+            return "Kitchen notes"
+        return "Standard"
+
+    @admin.display(description="Kitchen notes")
+    def kitchen_notes_preview(self, obj):
+        return obj.notes or "No special order notes."
+
+    @admin.display(description="Allergy / dietary restriction")
+    def allergy_alert_preview(self, obj):
+        return obj.allergy_notes or "No allergy or dietary restriction."
 
     @admin.display(description="Average delivery time")
     def average_delivery_time_display(self, obj):
