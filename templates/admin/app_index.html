@@ -10,16 +10,45 @@
 
 {% block content %}
 <div id="content-main">
-  <div>
+  <div class="bs-admin-dashboard-layout">
     <div class="bs-admin-section-head">
       <div>
         <span class="bs-admin-kicker">Admin Module</span>
         <h1>{{ app_label|capfirst }}</h1>
-        <p>Manage the records, relationships, and workflows tied to this operational module with a cleaner, more legible layout.</p>
+        <p>Manage records, workflows, and day-to-day operations in a clean, focused workspace.</p>
       </div>
     </div>
 
-    {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+    <div class="bs-admin-modules-grid">
+      {% for app in app_list %}
+        <article class="bs-admin-module-card">
+          <header>
+            <h2>{{ app.name }}</h2>
+          </header>
+          <ul>
+            {% for model in app.models %}
+              <li>
+                <div class="bs-admin-model-link">
+                  {% if model.admin_url %}
+                    <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                  {% else %}
+                    <span>{{ model.name }}</span>
+                  {% endif %}
+                </div>
+                <div class="bs-admin-model-actions">
+                  {% if model.add_url %}
+                    <a href="{{ model.add_url }}">{% translate "Add" %}</a>
+                  {% endif %}
+                  {% if model.admin_url %}
+                    <a href="{{ model.admin_url }}">{% translate "Manage" %}</a>
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </article>
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endblock %}

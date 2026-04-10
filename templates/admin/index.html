@@ -1,11 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n static %}
 
-{% block extrastyle %}
-{{ block.super }}
-<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}">
-{% endblock %}
-
 {% block coltype %}colMS{% endblock %}
 
 {% block bodyclass %}{{ block.super }} dashboard{% endblock %}
@@ -64,7 +59,36 @@
 
     <section class="bs-admin-split-grid">
       <div class="bs-admin-main-modules">
-        {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+        <div class="bs-admin-modules-grid">
+          {% for app in app_list %}
+            <article class="bs-admin-module-card">
+              <header>
+                <h2>{{ app.name }}</h2>
+              </header>
+              <ul>
+                {% for model in app.models %}
+                  <li>
+                    <div class="bs-admin-model-link">
+                      {% if model.admin_url %}
+                        <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                      {% else %}
+                        <span>{{ model.name }}</span>
+                      {% endif %}
+                    </div>
+                    <div class="bs-admin-model-actions">
+                      {% if model.add_url %}
+                        <a href="{{ model.add_url }}">{% translate "Add" %}</a>
+                      {% endif %}
+                      {% if model.admin_url %}
+                        <a href="{{ model.admin_url }}">{% translate "Manage" %}</a>
+                      {% endif %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </article>
+          {% endfor %}
+        </div>
       </div>
       <aside class="bs-admin-side-module module" id="recent-actions-module">
         <h2>{% translate 'Recent actions' %}</h2>

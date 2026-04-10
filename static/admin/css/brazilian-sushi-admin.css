@@ -85,8 +85,9 @@ a:hover {
   gap: 1.25rem;
   align-items: center;
   padding: 0.9rem 1.4rem;
-  border-bottom: 1px solid var(--bs-border-soft);
+  border-bottom: 1px solid var(--bs-border-soft) !important;
   backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, #161311 0%, #1b1614 55%, #141210 100%) !important;
 }
 
 #branding {
@@ -239,6 +240,14 @@ a:hover {
   color: var(--bs-ink);
 }
 
+.module,
+.dashboard .module,
+#content-related,
+#recent-actions-module {
+  background: linear-gradient(180deg, rgba(248, 242, 232, 0.98), rgba(239, 228, 210, 0.95)) !important;
+  border-color: var(--bs-border) !important;
+}
+
 .module h2,
 .module caption,
 .inline-group h2,
@@ -251,6 +260,13 @@ legend {
   font-family: "Playfair Display", serif;
   font-size: 1.24rem;
   font-weight: 600;
+}
+
+.dashboard .module h2,
+.dashboard .module caption,
+#content-related h2 {
+  background: transparent !important;
+  color: #221b16 !important;
 }
 
 .dashboard .app-list table,
@@ -533,6 +549,89 @@ input[type="submit"].default:hover {
 .bs-admin-side-module {
   position: sticky;
   top: 88px;
+}
+
+.bs-admin-modules-grid {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.bs-admin-module-card {
+  border-radius: var(--bs-radius-lg);
+  border: 1px solid var(--bs-border);
+  background: linear-gradient(180deg, rgba(248, 242, 232, 0.98), rgba(239, 228, 210, 0.95));
+  box-shadow: var(--bs-shadow-soft);
+  overflow: hidden;
+}
+
+.bs-admin-module-card > header {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(32, 25, 21, 0.1);
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.bs-admin-module-card > header h2 {
+  margin: 0;
+  color: #251d17;
+  font-family: "Playfair Display", serif;
+  font-size: 1.3rem;
+}
+
+.bs-admin-module-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bs-admin-module-card li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding: 0.72rem 1rem;
+  border-top: 1px solid rgba(32, 25, 21, 0.08);
+}
+
+.bs-admin-module-card li:first-child {
+  border-top: none;
+}
+
+.bs-admin-model-link a,
+.bs-admin-model-link span {
+  color: #30251d;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.bs-admin-model-link a:hover {
+  color: #815f2e;
+}
+
+.bs-admin-model-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.bs-admin-model-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(32, 25, 21, 0.14);
+  color: #2f241a;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.bs-admin-model-actions a:hover {
+  border-color: rgba(200, 159, 73, 0.36);
+  background: rgba(200, 159, 73, 0.16);
 }
 
 .bs-admin-badge {
