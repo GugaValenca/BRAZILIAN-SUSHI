@@ -1,48 +1,93 @@
-{% extends "admin/index.html" %}
-{% load i18n %}
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}">
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block nav-breadcrumbs %}{% endblock %}
 
 {% block content %}
-<div class="bs-admin-hero">
+<div id="content-main">
   <div>
-    <span class="bs-admin-kicker">Control Center</span>
-    <h1>Operations Dashboard</h1>
-    <p>
-      Keep service standards high with a clear view of customers, menu content, reviews, support messages, and every order moving through the kitchen and delivery flow.
-    </p>
+    <div class="bs-admin-hero">
+      <div>
+        <span class="bs-admin-kicker">Control Center</span>
+        <h1>Operations Dashboard</h1>
+        <p>
+          Keep service standards high with a clear view of customers, menu content, reviews, support messages, and every order moving through the kitchen and delivery flow.
+        </p>
+      </div>
+      <div class="bs-admin-hero-panels">
+        <div class="bs-admin-panel-card">
+          <strong>{{ app_list|length }}</strong>
+          <span>Operational modules</span>
+        </div>
+        <div class="bs-admin-panel-card">
+          <strong>Live</strong>
+          <span>Production-ready controls</span>
+        </div>
+        <div class="bs-admin-panel-card">
+          <strong>Priority</strong>
+          <span>Orders, guests, reviews, and campaigns aligned in one admin.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bs-admin-dashboard-intro">
+      <article class="bs-admin-dashboard-card">
+        <span class="bs-admin-kicker">Orders Workflow</span>
+        <h2>From intake to delivery</h2>
+        <p>Track received, confirmed, preparing, ready, out-for-delivery, delivered, and cancelled orders with less friction.</p>
+      </article>
+      <article class="bs-admin-dashboard-card">
+        <span class="bs-admin-kicker">Kitchen Focus</span>
+        <h2>Surface the right alerts</h2>
+        <p>Allergy notes, dietary restrictions, and special requests stay visible so the team can act with confidence.</p>
+      </article>
+      <article class="bs-admin-dashboard-card">
+        <span class="bs-admin-kicker">Customer Quality</span>
+        <h2>Protect the brand experience</h2>
+        <p>Moderate reviews, manage verification, support returning customers, and keep campaigns operationally clean.</p>
+      </article>
+    </div>
+
+    {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
   </div>
-  <div class="bs-admin-hero-panels">
-    <div class="bs-admin-panel-card">
-      <strong>{{ app_list|length }}</strong>
-      <span>Operational modules</span>
-    </div>
-    <div class="bs-admin-panel-card">
-      <strong>Live</strong>
-      <span>Production-ready controls</span>
-    </div>
-    <div class="bs-admin-panel-card">
-      <strong>Priority</strong>
-      <span>Orders, guests, reviews, and campaigns aligned in one admin.</span>
+
+  <div id="content-related">
+    <div class="module" id="recent-actions-module">
+      <h2>{% translate 'Recent actions' %}</h2>
+      <h3>{% translate 'My actions' %}</h3>
+      {% load log %}
+      {% get_admin_log 10 as admin_log for_user user %}
+      {% if not admin_log %}
+        <p>{% translate 'None available' %}</p>
+      {% else %}
+        <ul class="actionlist">
+          {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% elif entry.is_change %}changelink{% elif entry.is_deletion %}deletelink{% endif %}">
+              {% if entry.is_deletion or not entry.get_admin_url %}
+                {{ entry.object_repr }}
+              {% else %}
+                <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+              {% endif %}
+              <br>
+              {% if entry.content_type %}
+                <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+              {% else %}
+                <span class="mini quiet">{% translate 'Unknown content' %}</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     </div>
   </div>
 </div>
-
-<div class="bs-admin-dashboard-intro">
-  <article class="bs-admin-dashboard-card">
-    <span class="bs-admin-kicker">Orders Workflow</span>
-    <h2>From intake to delivery</h2>
-    <p>Track received, confirmed, preparing, ready, out-for-delivery, delivered, and cancelled orders with less friction.</p>
-  </article>
-  <article class="bs-admin-dashboard-card">
-    <span class="bs-admin-kicker">Kitchen Focus</span>
-    <h2>Surface the right alerts</h2>
-    <p>Allergy notes, dietary restrictions, and special requests stay visible so the team can act with confidence.</p>
-  </article>
-  <article class="bs-admin-dashboard-card">
-    <span class="bs-admin-kicker">Customer Quality</span>
-    <h2>Protect the brand experience</h2>
-    <p>Moderate reviews, manage verification, support returning customers, and keep campaigns operationally clean.</p>
-  </article>
-</div>
-
-{{ block.super }}
 {% endblock %}

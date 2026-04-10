@@ -1,8 +1,25 @@
-{% extends "admin/app_index.html" %}
+{% extends "admin/base_site.html" %}
+{% load i18n %}
 
-{% block content_title %}
-<div class="bs-admin-section-head">
-  <span class="bs-admin-kicker">Admin Module</span>
-  <h1>{{ app_label|capfirst }}</h1>
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+  &rsaquo; {{ app_label|capfirst }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <div>
+    <div class="bs-admin-section-head">
+      <div>
+        <span class="bs-admin-kicker">Admin Module</span>
+        <h1>{{ app_label|capfirst }}</h1>
+        <p>Manage the records, relationships, and workflows tied to this operational module with a cleaner, more legible layout.</p>
+      </div>
+    </div>
+
+    {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+  </div>
 </div>
 {% endblock %}
