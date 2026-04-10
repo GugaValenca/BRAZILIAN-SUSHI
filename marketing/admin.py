@@ -22,13 +22,34 @@ class CouponAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ("user", "title", "rating", "approval_status", "created_at")
+    list_display = ("order_reference", "user", "order_items_preview", "rating", "approval_status", "created_at")
     list_filter = ("approval_status", "rating")
-    search_fields = ("user__email", "title", "content")
-    autocomplete_fields = ("user",)
+    search_fields = ("user__email", "title", "content", "order__id", "order__guest_name", "order__guest_email")
+    autocomplete_fields = ("user", "order")
     list_editable = ("approval_status",)
     date_hierarchy = "created_at"
+    readonly_fields = ("order_reference", "order_items_preview", "created_at")
     actions = ("approve_reviews", "reject_reviews")
+    fieldsets = (
+        (
+            "Review details",
+            {
+                "fields": ("user", "order", "order_reference", "order_items_preview", "rating", "title", "content", "approval_status", "created_at"),
+            },
+        ),
+    )
+
+    @admin.display(description="Order")
+    def order_reference(self, obj):
+        if not obj.order_id:
+            return "No order linked"
+        return f"Order #{obj.order_id}"
+
+    @admin.display(description="Ordered items")
+    def order_items_preview(self, obj):
+        if not obj.order_id:
+            return "No linked order items."
+        return ", ".join(item.menu_item.name for item in obj.order.items.select_related("menu_item").all())
 
     @admin.action(description="Approve selected reviews")
     def approve_reviews(self, request, queryset):

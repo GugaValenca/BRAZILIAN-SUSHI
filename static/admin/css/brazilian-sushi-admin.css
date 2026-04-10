@@ -284,6 +284,25 @@ legend {
   border-color: rgba(255,255,255,0.05);
 }
 
+.form-row,
+.aligned .form-row {
+  padding: 1rem 1.25rem;
+}
+
+.readonly,
+.help,
+.form-row p {
+  color: var(--bs-admin-muted);
+}
+
+.readonly {
+  display: block;
+  padding: 0.95rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--bs-admin-border);
+  border-radius: 14px;
+}
+
 fieldset.module.aligned,
 .inline-group {
   overflow: hidden;

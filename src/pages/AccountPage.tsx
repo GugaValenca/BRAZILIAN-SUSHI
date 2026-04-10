@@ -44,6 +44,7 @@ const AccountPage = () => {
   const queryClient = useQueryClient();
   const { user, tokens, isAuthenticated, refreshProfile } = useAuth();
   const { addItem } = useCart();
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profileForm, setProfileForm] = useState({
     first_name: user?.first_name ?? "",
     last_name: user?.last_name ?? "",
@@ -61,6 +62,7 @@ const AccountPage = () => {
       phone_number: user.phone_number,
       notification_preference: user.notification_preference,
     });
+    setIsEditingProfile(false);
   }, [user]);
 
   const token = tokens?.access;
@@ -96,6 +98,22 @@ const AccountPage = () => {
   }), [orders]);
 
   const canLeaveReview = Boolean(eligibleReviewOrder);
+  const notificationPreferenceLabel = {
+    sms: "SMS updates",
+    email: "Email updates",
+    both: "SMS + Email updates",
+  } as const;
+
+  const resetProfileDraft = () => {
+    if (!user) return;
+    setProfileForm({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      phone_number: user.phone_number,
+      notification_preference: user.notification_preference,
+    });
+    setIsEditingProfile(false);
+  };
 
   const updateProfileMutation = useMutation({
     mutationFn: () =>
@@ -106,6 +124,7 @@ const AccountPage = () => {
       }),
     onSuccess: async () => {
       await refreshProfile();
+      setIsEditingProfile(false);
       toast.success("Profile updated");
     },
     onError: () => toast.error("Could not update profile right now."),
@@ -213,19 +232,62 @@ const AccountPage = () => {
         <div className="grid xl:grid-cols-[1fr_1fr] gap-8">
           <div className="space-y-8">
             <section className="bg-card border border-border rounded-2xl p-6 space-y-4">
-              <h3 className="text-2xl font-display font-bold">Profile</h3>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <input value={profileForm.first_name} onChange={(e) => setProfileForm((c) => ({ ...c, first_name: e.target.value }))} className="bg-background border border-border rounded-lg px-4 py-3 text-sm" placeholder="First name" />
-                <input value={profileForm.last_name} onChange={(e) => setProfileForm((c) => ({ ...c, last_name: e.target.value }))} className="bg-background border border-border rounded-lg px-4 py-3 text-sm" placeholder="Last name" />
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="text-2xl font-display font-bold">Profile</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Your personal details stay saved to your account. Open edit mode only when you want to update them.
+                  </p>
+                </div>
+                {!isEditingProfile ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingProfile(true)}
+                    className="border border-primary/30 px-5 py-3 rounded-lg font-semibold"
+                  >
+                    Edit Information
+                  </button>
+                ) : null}
               </div>
-              <input value={user.email} disabled className="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-sm text-muted-foreground" />
-              <input value={profileForm.phone_number} onChange={(e) => setProfileForm((c) => ({ ...c, phone_number: e.target.value }))} className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm" placeholder="Phone" />
-              <div className="grid sm:grid-cols-3 gap-3">
-                {([ ["sms", "SMS"], ["email", "Email"], ["both", "SMS + Email"] ] as const).map(([value, label]) => (
-                  <button key={value} type="button" onClick={() => setProfileForm((c) => ({ ...c, notification_preference: value }))} className={`rounded-xl border px-4 py-3 text-sm font-medium ${profileForm.notification_preference === value ? "border-primary bg-primary/5" : "border-border"}`}>{label}</button>
-                ))}
-              </div>
-              <button type="button" onClick={() => updateProfileMutation.mutate()} disabled={updateProfileMutation.isPending} className="bg-gradient-gold text-primary-foreground px-6 py-3 rounded-lg font-semibold disabled:opacity-70">{updateProfileMutation.isPending ? "Saving..." : "Save Profile"}</button>
+
+              {!isEditingProfile ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-border bg-background/60 p-4">
+                    <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Name</p>
+                    <p className="mt-2 text-base font-semibold">{`${user.first_name} ${user.last_name}`.trim() || "Not provided"}</p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-background/60 p-4">
+                    <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Email</p>
+                    <p className="mt-2 text-base font-semibold break-all">{user.email}</p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-background/60 p-4">
+                    <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Phone</p>
+                    <p className="mt-2 text-base font-semibold">{user.phone_number || "Not provided"}</p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-background/60 p-4">
+                    <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Notifications</p>
+                    <p className="mt-2 text-base font-semibold">{notificationPreferenceLabel[user.notification_preference]}</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <input value={profileForm.first_name} onChange={(e) => setProfileForm((c) => ({ ...c, first_name: e.target.value }))} className="bg-background border border-border rounded-lg px-4 py-3 text-sm" placeholder="First name" />
+                    <input value={profileForm.last_name} onChange={(e) => setProfileForm((c) => ({ ...c, last_name: e.target.value }))} className="bg-background border border-border rounded-lg px-4 py-3 text-sm" placeholder="Last name" />
+                  </div>
+                  <input value={user.email} disabled className="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-sm text-muted-foreground" />
+                  <input value={profileForm.phone_number} onChange={(e) => setProfileForm((c) => ({ ...c, phone_number: e.target.value }))} className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm" placeholder="Phone" />
+                  <div className="grid sm:grid-cols-3 gap-3">
+                    {([["sms", "SMS"], ["email", "Email"], ["both", "SMS + Email"]] as const).map(([value, label]) => (
+                      <button key={value} type="button" onClick={() => setProfileForm((c) => ({ ...c, notification_preference: value }))} className={`rounded-xl border px-4 py-3 text-sm font-medium ${profileForm.notification_preference === value ? "border-primary bg-primary/5" : "border-border"}`}>{label}</button>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <button type="button" onClick={() => updateProfileMutation.mutate()} disabled={updateProfileMutation.isPending} className="bg-gradient-gold text-primary-foreground px-6 py-3 rounded-lg font-semibold disabled:opacity-70">{updateProfileMutation.isPending ? "Saving..." : "Save Changes"}</button>
+                    <button type="button" onClick={resetProfileDraft} disabled={updateProfileMutation.isPending} className="border border-border px-6 py-3 rounded-lg font-semibold disabled:opacity-70">Cancel</button>
+                  </div>
+                </>
+              )}
             </section>
 
             <section className="bg-card border border-border rounded-2xl p-6 space-y-4">

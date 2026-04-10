@@ -21,10 +21,29 @@ class OrderStatusEventInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("id", "customer", "guest_name", "order_type", "status", "total", "notification_preference", "created_at")
+    list_display = (
+        "id",
+        "guest_name",
+        "customer_email",
+        "customer_priority",
+        "order_type",
+        "status",
+        "total",
+        "notification_preference",
+        "created_at",
+    )
     list_filter = ("order_type", "status", "notification_preference", "created_at")
     search_fields = ("id", "customer__email", "guest_email", "guest_phone", "guest_name", "tracking_token")
-    readonly_fields = ("tracking_token", "subtotal", "discount_amount", "total", "created_at", "updated_at")
+    readonly_fields = (
+        "tracking_token",
+        "subtotal",
+        "discount_amount",
+        "total",
+        "items_preview",
+        "average_delivery_time_display",
+        "created_at",
+        "updated_at",
+    )
     autocomplete_fields = ("customer", "delivery_address", "coupon", "delivery_zone")
     date_hierarchy = "created_at"
     list_per_page = 30
@@ -33,7 +52,7 @@ class OrderAdmin(admin.ModelAdmin):
         (
             "Order overview",
             {
-                "fields": ("customer", "order_type", "status", "tracking_token", "notification_preference"),
+                "fields": ("customer", "order_type", "status", "tracking_token", "notification_preference", "items_preview"),
             },
         ),
         (
@@ -63,11 +82,34 @@ class OrderAdmin(admin.ModelAdmin):
         (
             "Timeline",
             {
-                "fields": ("confirmed_at", "preparation_started_at", "dispatched_at", "completed_at", "created_at", "updated_at"),
+                "fields": ("confirmed_at", "preparation_started_at", "dispatched_at", "completed_at", "average_delivery_time_display", "created_at", "updated_at"),
             },
         ),
     )
-    actions = ("mark_confirmed", "mark_preparing", "mark_ready", "mark_out_for_delivery", "mark_delivered")
+    actions = ("mark_confirmed", "mark_preparing", "mark_ready", "mark_out_for_delivery", "mark_delivered", "mark_cancelled")
+
+    @admin.display(description="Customer email", ordering="customer__email")
+    def customer_email(self, obj):
+        return obj.customer.email if obj.customer else obj.guest_email or "-"
+
+    @admin.display(description="Priority")
+    def customer_priority(self, obj):
+        if obj.customer and obj.customer.is_verified_customer:
+            return "Verified priority"
+        return "Standard"
+
+    @admin.display(description="Items in order")
+    def items_preview(self, obj):
+        items = list(obj.items.select_related("menu_item").all())
+        if not items:
+            return "No items added yet."
+        return ", ".join(f"{item.quantity}x {item.menu_item.name}" for item in items)
+
+    @admin.display(description="Average delivery time")
+    def average_delivery_time_display(self, obj):
+        if obj.average_delivery_time is None:
+            return "Not available yet"
+        return f"{obj.average_delivery_time} min"
 
     def _apply_status_transition(self, order, next_status):
         order.status = next_status
@@ -83,7 +125,7 @@ class OrderAdmin(admin.ModelAdmin):
         elif next_status == Order.Status.OUT_FOR_DELIVERY and not order.dispatched_at:
             order.dispatched_at = now
             updated_fields.append("dispatched_at")
-        elif next_status in {Order.Status.READY, Order.Status.DELIVERED} and not order.completed_at:
+        elif next_status == Order.Status.DELIVERED and not order.completed_at:
             order.completed_at = now
             updated_fields.append("completed_at")
 
@@ -124,6 +166,10 @@ class OrderAdmin(admin.ModelAdmin):
     @admin.action(description="Mark selected orders as delivered")
     def mark_delivered(self, request, queryset):
         self._bulk_transition(queryset, Order.Status.DELIVERED)
+
+    @admin.action(description="Mark selected orders as cancelled")
+    def mark_cancelled(self, request, queryset):
+        self._bulk_transition(queryset, Order.Status.CANCELLED)
 
 
 @admin.register(DeliveryZone)
