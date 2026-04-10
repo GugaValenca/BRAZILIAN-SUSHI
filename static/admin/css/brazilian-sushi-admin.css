@@ -568,40 +568,73 @@ input[type="submit"].default {
   border: none;
 }
 
+.login #nav-sidebar,
+.login #toggle-nav-sidebar,
+.login .breadcrumbs,
+.login #content-start {
+  display: none !important;
+}
+
 .login #header {
   display: none;
 }
 
 .login #content {
   width: min(1220px, calc(100% - 48px));
-  padding: 3rem 0;
+  padding: 4rem 0 3rem;
 }
 
 .bs-admin-login-shell {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(360px, 430px);
-  gap: 2rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(380px, 440px);
+  gap: 2.25rem;
   align-items: stretch;
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 170px);
 }
 
 .bs-admin-login-showcase {
-  padding: 2.4rem;
-  border-radius: var(--bs-radius-xl);
+  display: grid;
+  align-content: space-between;
+  gap: 1.75rem;
+  padding: 2.75rem;
+  border-radius: 34px;
   background:
     radial-gradient(circle at top left, rgba(199, 154, 59, 0.14), transparent 34%),
-    linear-gradient(180deg, rgba(255, 251, 245, 0.96), rgba(246, 236, 223, 0.92));
+    radial-gradient(circle at bottom right, rgba(185, 65, 50, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255, 251, 245, 0.97), rgba(246, 236, 223, 0.94));
   border: 1px solid rgba(199, 154, 59, 0.16);
   box-shadow: var(--bs-shadow-lg);
 }
 
+.bs-admin-login-showcase h1 {
+  max-width: 14ch;
+  font-size: clamp(3rem, 5vw, 4.8rem);
+  line-height: 0.95;
+}
+
+.bs-admin-login-showcase p {
+  max-width: 60ch;
+  font-size: 1.02rem;
+}
+
+.bs-admin-login-highlights {
+  grid-template-columns: 1fr;
+}
+
 .bs-admin-login-card {
-  padding: 1.6rem;
-  border-radius: var(--bs-radius-xl);
+  display: grid;
+  align-content: start;
+  gap: 1.3rem;
+  padding: 2rem;
+  border-radius: 34px;
   background: linear-gradient(180deg, rgba(31, 22, 18, 0.98), rgba(24, 17, 13, 0.96));
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 26px 70px rgba(26, 18, 13, 0.22);
   color: #fff8f1;
+}
+
+.bs-admin-login-card-head h2 {
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
 }
 
 .bs-admin-login-card h2,
@@ -621,14 +654,13 @@ input[type="submit"].default {
 }
 
 .bs-admin-login-form {
-  margin-top: 1.5rem;
   display: grid;
-  gap: 1rem;
+  gap: 1.15rem;
 }
 
 .bs-admin-field {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.55rem;
 }
 
 .bs-admin-field label {
@@ -639,8 +671,10 @@ input[type="submit"].default {
 .bs-admin-login-card input[type="text"],
 .bs-admin-login-card input[type="password"],
 .bs-admin-login-card input[type="email"] {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(217, 182, 112, 0.18) !important;
+  min-height: 52px;
+  padding: 0 1rem !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  border-color: rgba(217, 182, 112, 0.2) !important;
   color: #fff8f1 !important;
 }
 
@@ -671,11 +705,17 @@ input[type="submit"].default {
 }
 
 .login .submit-row {
+  justify-content: flex-start;
   padding: 0;
-  margin-top: 0.4rem;
+  margin-top: 0.25rem;
   background: transparent;
   border: none;
   box-shadow: none;
+}
+
+.login .submit-row input {
+  min-width: 132px;
+  min-height: 48px;
 }
 
 #nav-sidebar {
@@ -730,6 +770,14 @@ input[type="submit"].default {
   .bs-admin-section-head,
   .bs-admin-login-shell {
     grid-template-columns: 1fr;
+  }
+
+  .bs-admin-login-showcase {
+    padding: 2rem;
+  }
+
+  .bs-admin-login-card {
+    padding: 1.5rem;
   }
 
   .bs-admin-dashboard-intro,
