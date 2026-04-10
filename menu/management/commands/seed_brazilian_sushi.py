@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from marketing.models import Coupon, Promotion, Review
 from menu.models import Category, MenuItem, MenuOption, MenuOptionGroup
-from orders.models import DeliveryZone
+from orders.models import DeliveryZone, Order
 
 User = get_user_model()
 
@@ -252,6 +252,7 @@ class Command(BaseCommand):
                 "rating": 5,
                 "title": "Beautifully packed and consistently fresh",
                 "content": "The rolls arrive neatly presented, the sashimi tastes pristine, and the entire order feels carefully prepared from start to finish.",
+                "item_slugs": ["brazilian-roll", "salmon-nigiri"],
             },
             {
                 "email": "james.lee.review@braziliansushi.local",
@@ -261,6 +262,7 @@ class Command(BaseCommand):
                 "rating": 5,
                 "title": "A premium delivery experience",
                 "content": "From checkout to delivery updates, everything feels polished. The nigiri and hand rolls arrive with the texture and balance you hope for.",
+                "item_slugs": ["dragon-roll", "tuna-nigiri"],
             },
             {
                 "email": "ana.paula.review@braziliansushi.local",
@@ -270,6 +272,7 @@ class Command(BaseCommand):
                 "rating": 5,
                 "title": "Reliable, refined, and easy to love",
                 "content": "The menu has range, the combos are generous, and the flavors feel elevated without losing warmth. It is our go-to sushi night choice.",
+                "item_slugs": ["date-night-combo"],
             },
         ]
 
@@ -290,10 +293,40 @@ class Command(BaseCommand):
                 user.set_unusable_password()
                 user.save(update_fields=["password"])
 
+            review_order, _ = Order.objects.get_or_create(
+                customer=user,
+                status=Order.Status.DELIVERED,
+                guest_email=user.email,
+                defaults={
+                    "order_type": Order.OrderType.DELIVERY,
+                    "guest_name": user.get_full_name(),
+                    "guest_phone": "8135550199",
+                    "subtotal": Decimal("0.00"),
+                    "total": Decimal("0.00"),
+                    "completed_at": now - timedelta(hours=2),
+                },
+            )
+
+            if not review_order.items.exists():
+                subtotal = Decimal("0.00")
+                for slug in review_entry["item_slugs"]:
+                    menu_item = MenuItem.objects.get(slug=slug)
+                    review_order.items.create(
+                        menu_item=menu_item,
+                        quantity=1,
+                        unit_price=menu_item.price,
+                        line_total=menu_item.price,
+                    )
+                    subtotal += menu_item.price
+                review_order.subtotal = subtotal
+                review_order.total = subtotal
+                review_order.save(update_fields=["subtotal", "total"])
+
             Review.objects.update_or_create(
                 user=user,
-                title=review_entry["title"],
+                order=review_order,
                 defaults={
+                    "title": review_entry["title"],
                     "rating": review_entry["rating"],
                     "content": review_entry["content"],
                     "approval_status": Review.ApprovalStatus.APPROVED,

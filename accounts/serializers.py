@@ -7,6 +7,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 from .models import Address, FavoriteMenuItem
 from .services import send_account_confirmation
+from marketing.services import get_eligible_review_order
 
 User = get_user_model()
 
@@ -77,7 +78,7 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ("email", "is_verified_customer", "verified_reason", "loyalty_completed_orders", "is_staff", "account_confirmed_at", "can_submit_review")
 
     def get_can_submit_review(self, obj):
-        return obj.orders.filter(completed_at__isnull=False).exists()
+        return bool(get_eligible_review_order(obj))
 
 
 class AdminCustomerSerializer(serializers.ModelSerializer):

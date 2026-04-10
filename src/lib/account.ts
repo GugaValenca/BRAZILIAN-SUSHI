@@ -77,6 +77,7 @@ export interface FavoriteItem {
 }
 
 export interface ReviewPayload {
+  order_id: number;
   rating: number;
   title: string;
   content: string;
@@ -84,6 +85,8 @@ export interface ReviewPayload {
 
 export interface ReviewResponse {
   id: number;
+  order_id: number;
+  order_item_names: string[];
   customer_name: string;
   is_verified_customer: boolean;
   rating: number;
@@ -92,6 +95,12 @@ export interface ReviewResponse {
   customer_photo: string | null;
   approval_status: string;
   created_at: string;
+}
+
+export interface EligibleReviewOrder {
+  order_id: number;
+  available_until: string;
+  product_names: string[];
 }
 
 export interface OrderListItem {
@@ -210,6 +219,12 @@ export function submitReview(token: string, payload: ReviewPayload) {
     method: "POST",
     token,
     body: JSON.stringify(payload),
+  });
+}
+
+export function fetchEligibleReviewOrder(token: string) {
+  return apiRequest<EligibleReviewOrder>("/marketing/reviews/eligibility/", {
+    token,
   });
 }
 

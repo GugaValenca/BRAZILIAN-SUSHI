@@ -42,6 +42,7 @@ class Review(models.Model):
         REJECTED = "rejected", "Rejected"
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews")
+    order = models.OneToOneField("orders.Order", on_delete=models.CASCADE, related_name="review", null=True, blank=True)
     rating = models.PositiveSmallIntegerField()
     title = models.CharField(max_length=120)
     content = models.TextField()

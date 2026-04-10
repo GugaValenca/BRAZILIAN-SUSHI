@@ -11,6 +11,7 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import {
   createAddress,
   fetchAddresses,
+  fetchEligibleReviewOrder,
   fetchFavorites,
   fetchOrders,
   removeFavorite,
@@ -82,15 +83,19 @@ const AccountPage = () => {
     enabled: Boolean(token),
   });
 
+  const { data: eligibleReviewOrder } = useQuery({
+    queryKey: ["eligible-review-order", token],
+    queryFn: () => fetchEligibleReviewOrder(token!),
+    enabled: Boolean(token),
+    retry: false,
+  });
+
   const stats = useMemo(() => ({
     totalOrders: orders.length,
     totalSpent: orders.reduce((sum, order) => sum + Number(order.total), 0),
   }), [orders]);
 
-  const canLeaveReview = useMemo(
-    () => user.can_submit_review || orders.some((order) => Boolean(order.completed_at)),
-    [orders, user.can_submit_review],
-  );
+  const canLeaveReview = Boolean(eligibleReviewOrder);
 
   const updateProfileMutation = useMutation({
     mutationFn: () =>
@@ -147,9 +152,14 @@ const AccountPage = () => {
   });
 
   const reviewMutation = useMutation({
-    mutationFn: () => submitReview(token!, reviewForm),
+    mutationFn: () =>
+      submitReview(token!, {
+        ...reviewForm,
+        order_id: eligibleReviewOrder!.order_id,
+      }),
     onSuccess: () => {
       setReviewForm({ rating: 5, title: "", content: "" });
+      void queryClient.invalidateQueries({ queryKey: ["eligible-review-order", token] });
       toast.success("Review submitted for approval");
     },
     onError: (error) =>
@@ -289,6 +299,15 @@ const AccountPage = () => {
               <h3 className="text-2xl font-display font-bold">Leave a Review</h3>
               {canLeaveReview ? (
                 <>
+                  <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 space-y-2">
+                    <p className="text-sm font-semibold text-foreground">Review for order #{eligibleReviewOrder?.order_id}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Items in this order: {eligibleReviewOrder?.product_names.join(", ")}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      This review stays available until {eligibleReviewOrder ? new Date(eligibleReviewOrder.available_until).toLocaleString() : ""}, or until you place a new order.
+                    </p>
+                  </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <input value={reviewForm.title} onChange={(e) => setReviewForm((c) => ({ ...c, title: e.target.value }))} className="bg-background border border-border rounded-lg px-4 py-3 text-sm" placeholder="Review title" />
                     <select value={reviewForm.rating} onChange={(e) => setReviewForm((c) => ({ ...c, rating: Number(e.target.value) }))} className="bg-background border border-border rounded-lg px-4 py-3 text-sm">
@@ -296,12 +315,19 @@ const AccountPage = () => {
                     </select>
                   </div>
                   <textarea value={reviewForm.content} onChange={(e) => setReviewForm((c) => ({ ...c, content: e.target.value }))} rows={4} className="w-full bg-background border border-border rounded-lg px-4 py-3 text-sm resize-none" placeholder="Tell other customers about your experience" />
-                  <button type="button" onClick={() => reviewMutation.mutate()} disabled={reviewMutation.isPending} className="bg-gradient-gold text-primary-foreground px-6 py-3 rounded-lg font-semibold disabled:opacity-70">
+                  <button
+                    type="button"
+                    onClick={() => reviewMutation.mutate()}
+                    disabled={reviewMutation.isPending || !eligibleReviewOrder}
+                    className="bg-gradient-gold text-primary-foreground px-6 py-3 rounded-lg font-semibold disabled:opacity-70"
+                  >
                     <span className="inline-flex items-center gap-2"><Star className="w-4 h-4" /> {reviewMutation.isPending ? "Submitting..." : "Submit Review"}</span>
                   </button>
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground">Reviews are unlocked after at least one completed order has been confirmed on your account.</p>
+                <p className="text-sm text-muted-foreground">
+                  Reviews are released only after a delivered order is completed successfully. Each review is tied to that specific order, remains open for up to 24 hours, and closes as soon as a new order is placed.
+                </p>
               )}
             </section>
           </div>
