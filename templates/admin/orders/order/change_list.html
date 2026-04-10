@@ -1,13 +1,7 @@
 {% extends "admin/change_list.html" %}
 
 {% block content_title %}
-<div class="bs-admin-section-head">
-  <div>
-    <span class="bs-admin-kicker">Orders Operations</span>
-    <h1>Live Orders</h1>
-    <p>Review status progression, spot kitchen or allergy alerts quickly, and keep the service line moving with fewer mistakes.</p>
-  </div>
-</div>
+{% include "admin/custom_change_list_title.html" %}
 
 <div class="bs-admin-workflow-grid">
   <article class="bs-admin-workflow-card">
