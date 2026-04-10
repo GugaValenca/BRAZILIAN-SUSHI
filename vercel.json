@@ -24,6 +24,10 @@
       "dest": "/api/asgi.py"
     },
     {
+      "src": "/static/(.*)",
+      "dest": "/api/asgi.py"
+    },
+    {
       "src": "/media/(.*)",
       "dest": "/api/asgi.py"
     },
