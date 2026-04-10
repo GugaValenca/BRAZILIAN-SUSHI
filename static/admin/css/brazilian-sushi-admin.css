@@ -790,3 +790,214 @@ input[type="submit"].default {
     padding: 1rem;
   }
 }
+
+/* Admin Refresh V2 */
+
+html,
+html[data-theme="light"],
+html[data-theme="dark"] {
+  --body-bg: radial-gradient(circle at 10% -10%, rgba(199, 154, 59, 0.14), transparent 34%), linear-gradient(180deg, #f8f3eb 0%, #f2ebdf 100%);
+}
+
+#container {
+  overflow: hidden;
+}
+
+#header {
+  grid-template-columns: minmax(280px, 1.2fr) auto minmax(260px, 1fr);
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+}
+
+#content,
+.breadcrumbs,
+#footer {
+  width: auto;
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+}
+
+#content {
+  padding-top: 1.25rem;
+}
+
+#nav-sidebar {
+  background: linear-gradient(180deg, #f9f3e8, #f4ebdc);
+  border-right: 1px solid rgba(69, 48, 33, 0.14);
+}
+
+#nav-filter {
+  border-radius: 12px;
+  border: 1px solid rgba(69, 48, 33, 0.16);
+  background: #fffdf9;
+}
+
+#nav-sidebar .current-app .section,
+#nav-sidebar .current-model {
+  background: rgba(199, 154, 59, 0.16);
+}
+
+#nav-sidebar th,
+#nav-sidebar a {
+  color: #4a362b !important;
+}
+
+#nav-sidebar tr:hover th,
+#nav-sidebar tr:hover td {
+  background: rgba(199, 154, 59, 0.08);
+}
+
+.dashboard #content-main,
+.change-list #content-main,
+.change-form #content-main {
+  display: block;
+}
+
+.bs-admin-dashboard-layout {
+  display: grid;
+  gap: 1rem;
+}
+
+.bs-admin-hero {
+  grid-template-columns: 1fr;
+  padding: 1.5rem;
+  margin-bottom: 0;
+}
+
+.bs-admin-hero h1 {
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  line-height: 1.1;
+  max-width: 18ch;
+}
+
+.bs-admin-hero p {
+  max-width: 86ch;
+}
+
+.bs-admin-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.bs-admin-panel-card {
+  padding: 0.95rem 1rem;
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(252, 246, 237, 0.9));
+}
+
+.bs-admin-panel-card strong {
+  font-size: 1.35rem;
+}
+
+.bs-admin-dashboard-intro {
+  margin-bottom: 0;
+  gap: 0.85rem;
+}
+
+.bs-admin-dashboard-card {
+  padding: 1rem 1.1rem;
+}
+
+.bs-admin-dashboard-card h2 {
+  font-size: 1.25rem;
+}
+
+.bs-admin-split-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1rem;
+  align-items: start;
+}
+
+.bs-admin-side-module {
+  position: sticky;
+  top: 1rem;
+}
+
+#content-related {
+  position: static;
+}
+
+.module h2,
+.module caption {
+  background: linear-gradient(180deg, rgba(255, 252, 246, 0.95), rgba(248, 239, 227, 0.92));
+  border-bottom: 1px solid rgba(69, 48, 33, 0.12);
+  border-radius: 18px 18px 0 0;
+}
+
+.dashboard .app-list tbody th,
+.dashboard .app-list tbody td,
+#result_list tbody td,
+#result_list tbody th {
+  padding-top: 0.78rem;
+  padding-bottom: 0.78rem;
+}
+
+.dashboard .app-list .addlink,
+.dashboard .app-list .changelink,
+.object-tools a,
+.object-tools a:link,
+.object-tools a:visited {
+  min-height: 30px;
+  font-size: 0.82rem;
+}
+
+.change-list #changelist-filter {
+  border-radius: 18px;
+}
+
+.change-list #changelist #toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.change-list #searchbar {
+  min-width: 280px;
+}
+
+.change-form .submit-row {
+  justify-content: flex-start;
+}
+
+@media (max-width: 1240px) {
+  #header {
+    grid-template-columns: 1fr;
+  }
+
+  #user-tools,
+  .bs-admin-toolbar {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .bs-admin-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bs-admin-split-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bs-admin-side-module {
+    position: static;
+  }
+}
+
+@media (max-width: 860px) {
+  #content,
+  .breadcrumbs,
+  #footer {
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+  }
+
+  .bs-admin-kpi-grid,
+  .bs-admin-dashboard-intro {
+    grid-template-columns: 1fr;
+  }
+
+  #header {
+    padding: 0.9rem;
+  }
+}
